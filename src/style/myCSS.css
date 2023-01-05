@@ -1,0 +1,23 @@
+.Menu{
+    text-align: center;
+}
+
+.Menu > a{
+    margin-left: 12px;
+    padding-top: 12px;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.Post{
+    border: 1px solid black;
+    width: 700px;
+    text-align: center;
+    margin: auto;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+#searchArea{
+    margin-left:41%;
+}
