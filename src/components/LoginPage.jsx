@@ -10,7 +10,7 @@ export default function LoginPage() {
             email,
             password
         }).then((response) => {
-            if (response.status === 200) navigate('/Homepage/' + response.data.Id + '', {state:response.data})
+            if (response.status === 200) navigate('/Homepage', { state: response.data, replace:true })
         }).catch((error) => console.log(error))
 
     }

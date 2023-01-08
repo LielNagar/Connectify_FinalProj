@@ -1,13 +1,17 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import myCSS from '../style/myCSS.css'
-export default function Menu() {
+import { Link, useNavigate } from 'react-router-dom'
+
+export default function Menu(props) {
+
+  const navigateToSearch = useNavigate();
 
   return (
     <div className='Menu'>
-        <Link to='/HomePage'>Home Page</Link>
+        <Link to='/Homepage'>Home Page</Link>
         <Link to='/MyProfile'>MyProfile</Link>
-        <Link to='/Search'>Search a Friend</Link>
+        <Link onClick={()=>{
+          navigateToSearch('/Search', {state: props.user, replace:true})
+        }}>Search a Friend</Link>
         <Link to='/'>Logout</Link>
     </div>
   )

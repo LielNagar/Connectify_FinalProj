@@ -10,18 +10,18 @@ import { useEffect } from 'react';
 
 
 export default function HomePage() {
-    const {state:user} = useLocation()
+    const { state: user } = useLocation()
     const [post, setPost] = useState('')
     const { addPost } = useContext(PostContext)
 
     return (
         <div className='HomePage'>
             <Header user={user.UserName} />
-            <Menu />
+            <Menu user={user}/>
             <TextField style={{ width: '700px', marginTop: '5px', marginLeft: '27%', marginRight: '30%' }} multiline={true} rows={4} placeholder='leave us something....' onChange={(e) => setPost(e.target.value)} />
             <br />
-            <Button variant="text" style={{marginLeft: '47%', marginRight: '30%'}} onClick={() => addPost(post)}>Add Post!</Button>
-            <AllPosts />
+            <Button variant="text" style={{ marginLeft: '47%', marginRight: '30%' }} onClick={() => addPost(post,user)}>Add Post!</Button>
+            <AllPosts user={user} />
         </div>
     )
 }
