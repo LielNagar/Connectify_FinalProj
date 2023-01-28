@@ -7,8 +7,8 @@ export default function LoginPage() {
     //SIDE FUNCTIONS//
     const Login = () => {
         axios.post(`http://localhost:53653/api/Users/login`, {
-            email,
-            password
+            email: email.toLowerCase(),
+            password: password.toLowerCase()
         }).then((response) => {
             if (response.status === 200) navigate('/Homepage', { state: response.data, replace:true })
         }).catch((error) => console.log(error))

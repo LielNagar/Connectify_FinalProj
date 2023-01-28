@@ -5,7 +5,7 @@ export default function UsersCards(props) {
 
     return (
         <div>
-            {props.users.map((user) => <UserCard key={user.Id} id={user.Id} name={user.UserName} location={user.Location} profileImgUrl={user.ProfileImgUrl} />)}
+            {props.users.map((user) => <UserCard key={user.Id} id={user.Id} name={user.UserName} location={user.Location} profileImgUrl={user.ProfileImgUrl} currentId={props.currentId} search={true}/>)}
         </div>
     )
 }

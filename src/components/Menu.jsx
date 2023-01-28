@@ -3,16 +3,26 @@ import { Link, useNavigate } from 'react-router-dom'
 
 export default function Menu(props) {
 
-  const navigateToSearch = useNavigate();
+  const navigate = useNavigate();
+
+  const navigateToSearch = () => {
+    navigate('/Search', { state: props.user, replace: true })
+  }
+
+  const navigateToMyProfile = () => {
+    navigate('/MyProfile', { state: props.user, replace: true })
+  }
+
+  const navigateToHomePage = () => {
+    navigate('/Homepage', { state: props.user, replace: true })
+  }
 
   return (
     <div className='Menu'>
-        <Link to='/Homepage'>Home Page</Link>
-        <Link to='/MyProfile'>MyProfile</Link>
-        <Link onClick={()=>{
-          navigateToSearch('/Search', {state: props.user, replace:true})
-        }}>Search a Friend</Link>
-        <Link to='/'>Logout</Link>
+      <button onClick={navigateToHomePage}>HomePage</button>
+      <button onClick={navigateToMyProfile}>My Profile</button>
+      <button onClick={navigateToSearch}>Search A Friend</button>
+      <Link to='/'>Logout</Link>
     </div>
   )
 }

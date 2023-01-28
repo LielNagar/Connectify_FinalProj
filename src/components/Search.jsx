@@ -9,10 +9,12 @@ import TextField from '@mui/material/TextField';
 import { useState } from 'react';
 import axios from 'axios'
 import UsersCards from './UsersCards';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 export default function Search(props) {
     const { state: user } = useLocation()
+    // const params = useParams();
+    // const paramsAsJSON = JSON.parse(params)
     const [name, setName] = useState('')
     const [users, setUsers] = useState([])
     const search = () =>{
@@ -26,8 +28,9 @@ export default function Search(props) {
 
     return (
         <div className='Search'>
-            <Header user={props.user} />
-            <Menu />
+            <button onClick={()=> console.log(user)}>onClick</button>
+            <Header user={user.UserName} />
+            <Menu user={user} />
             <div id='searchArea'>
             <TextField
                 onChange={(e)=> setName(e.target.value)}
@@ -42,7 +45,7 @@ export default function Search(props) {
                     )
                 }}
             /></div>
-            <UsersCards users={users} />
+            <UsersCards users={users} currentId={user.Id} />
         </div>
     )
 }

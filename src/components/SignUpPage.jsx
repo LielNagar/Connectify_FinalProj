@@ -13,7 +13,9 @@ export default function SignUpPage() {
             userName,
             location,
             profileImgUrl
-        }).then((response) => console.log(response)).catch((error)=> console.log(error))
+        }).then((response) => {
+            
+        }).catch((error)=> console.log(error))
     }
 
     const [email, setEmail] = useState('')

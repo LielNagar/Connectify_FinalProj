@@ -6,6 +6,7 @@ import SignUpPage from './components/SignUpPage';
 import HomePage from './components/HomePage';
 //import Post from './components/Post';
 import Search from './components/Search';
+import MyProfile from './components/MyProfile';
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
           <Route exact path='/SignUp' element={<SignUpPage />}></Route>
           <Route exact path='/Homepage' element={<HomePage />}></Route>
           <Route exact path='/Search' element={<Search />}></Route>
-          <Route exact path='/MyProfile' element={<p>MyProfile</p>}></Route>
+          <Route exact path='/MyProfile' element={<MyProfile />}></Route>
         </Routes>
       </BrowserRouter>
     </div>
