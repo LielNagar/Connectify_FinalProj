@@ -17,34 +17,37 @@ export default function Search(props) {
     // const paramsAsJSON = JSON.parse(params)
     const [name, setName] = useState('')
     const [users, setUsers] = useState([])
-    const search = () =>{
-        axios.get(`http://localhost:53653/api/Users/search/${name}`).then((response)=>{
-            console.log(response.data)
-            setUsers(response.data)
-        }).catch((error)=>{
+    const search = () => {
+        axios.get(`http://localhost:53653/api/Users/${user.Id}/search/${name}`).then((response) => {
+            let usersToShow = [];
+            response.data.forEach((userReturned) => {
+                if (userReturned.Id != user.Id) usersToShow.push(userReturned)
+            })
+            setUsers(usersToShow)
+        }).catch((error) => {
             console.log(error)
         })
     }
 
     return (
         <div className='Search'>
-            <button onClick={()=> console.log(user)}>onClick</button>
+            <button onClick={() => console.log(user)}>onClick</button>
             <Header user={user.UserName} />
             <Menu user={user} />
             <div id='searchArea'>
-            <TextField
-                onChange={(e)=> setName(e.target.value)}
-                label="Search your friends"
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment>
-                            <IconButton onClick={search}>
-                                <SearchIcon />
-                            </IconButton>
-                        </InputAdornment>
-                    )
-                }}
-            /></div>
+                <TextField
+                    onChange={(e) => setName(e.target.value)}
+                    label="Search your friends"
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment>
+                                <IconButton onClick={search}>
+                                    <SearchIcon />
+                                </IconButton>
+                            </InputAdornment>
+                        )
+                    }}
+                /></div>
             <UsersCards users={users} currentId={user.Id} />
         </div>
     )

@@ -14,9 +14,12 @@ export default function PostContextProvider(props) {
     )
     axios.post('http://localhost:53653/api/Posts', {
       Publisher: user.Id,
-      content: post
+      content: post,
+      UserName: user.UserName,
+      Date: new Date()
     }).then((response) => {
-      if (response.status === 201) setPosts(...posts, response.data)
+      console.log(response.data)
+      if (response.status === 201) setPosts([...posts, response.data])
     }).catch((error) => {
       console.log(error)
     })
