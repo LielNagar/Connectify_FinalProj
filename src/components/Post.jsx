@@ -9,6 +9,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import {Link} from 'react-router-dom';
 
 export default function Post(props) {
     const [likes, setlikes] = useState(props.likes || 0)
@@ -36,7 +37,7 @@ export default function Post(props) {
                     </IconButton>
                     <span>{likes}</span>
                 </CardActions>
-                <a href=''> go to {props.userName} profile</a>
+                <Link to={`/Profile/${props.publisherId}`}> go to {props.userName} profile</Link>
             </Card>
         </div>
     )

@@ -18,6 +18,7 @@ function App() {
           <Route exact path='/Homepage' element={<HomePage />}></Route>
           <Route exact path='/Search' element={<Search />}></Route>
           <Route exact path='/MyProfile' element={<MyProfile />}></Route>
+          <Route exact path='/Profile/:userId' element={<p>profile</p>}></Route>
         </Routes>
       </BrowserRouter>
     </div>
