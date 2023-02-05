@@ -23,7 +23,6 @@ export default function PostContextProvider(props) {
     }).catch((error) => {
       console.log(error)
     })
-    //setPosts([...posts, post])
   }
 
   return (

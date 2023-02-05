@@ -10,7 +10,7 @@ export default function Menu(props) {
   }
 
   const navigateToMyProfile = () => {
-    navigate('/MyProfile', { state: props.user, replace: true })
+    navigate(`/Profile/${props.user.Id}`, { state: props.user, replace: true })
   }
 
   const navigateToHomePage = () => {

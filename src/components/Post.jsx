@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import { IconButton } from '@mui/material';
 import { useState, useContext } from 'react';
@@ -10,6 +10,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import {Link} from 'react-router-dom';
+import axios from 'axios';
 
 export default function Post(props) {
     const [likes, setlikes] = useState(props.likes || 0)

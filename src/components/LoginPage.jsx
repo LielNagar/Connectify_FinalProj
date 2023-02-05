@@ -1,5 +1,4 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios'
 
@@ -10,7 +9,10 @@ export default function LoginPage() {
             email: email.toLowerCase(),
             password: password.toLowerCase()
         }).then((response) => {
-            if (response.status === 200) navigate('/Homepage', { state: response.data, replace:true })
+            if (response.status === 200) {
+                localStorage.setItem('userLogged',JSON.stringify(response.data))
+                navigate('/Homepage', { state: response.data, replace: true })
+            }
         }).catch((error) => console.log(error))
 
     }
@@ -18,7 +20,6 @@ export default function LoginPage() {
 
     const [email, setEmail] = useState('')
     const [password, setpassword] = useState('')
-
     const navigate = useNavigate()
 
     return (

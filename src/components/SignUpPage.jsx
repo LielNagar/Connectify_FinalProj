@@ -1,21 +1,25 @@
 import React from 'react'
 import { useState } from 'react'
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import axios from 'axios'
 
 
 export default function SignUpPage() {
-
-    const signUp = () =>{
-        axios.post('http://localhost:53653/api/Users',{
+    const navigate = useNavigate()
+    const signUp = () => {
+        axios.post('http://localhost:53653/api/Users', {
             email,
             password,
             userName,
             location,
             profileImgUrl
         }).then((response) => {
-            
-        }).catch((error)=> console.log(error))
+            if (response.status === 201){
+                console.log(response.data)
+                localStorage.setItem('userLogged',JSON.stringify(response.data))
+                navigate('/Homepage', { state: response.data })
+            } 
+        }).catch((error) => console.log(error))
     }
 
     const [email, setEmail] = useState('')
@@ -23,7 +27,6 @@ export default function SignUpPage() {
     const [userName, setUserName] = useState('')
     const [location, setLocation] = useState('')
     const [profileImgUrl, setprofileImgUrl] = useState('')
-
 
     return (
         <div className='SignUpPage'>
