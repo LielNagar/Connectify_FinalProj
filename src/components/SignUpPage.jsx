@@ -12,13 +12,15 @@ export default function SignUpPage() {
             password,
             userName,
             location,
-            profileImgUrl
+            profileImgUrl,
+            birthday,
+            gender
         }).then((response) => {
-            if (response.status === 201){
+            if (response.status === 201) {
                 console.log(response.data)
-                localStorage.setItem('userLogged',JSON.stringify(response.data))
+                localStorage.setItem('userLogged', JSON.stringify(response.data))
                 navigate('/Homepage', { state: response.data })
-            } 
+            }
         }).catch((error) => console.log(error))
     }
 
@@ -27,6 +29,8 @@ export default function SignUpPage() {
     const [userName, setUserName] = useState('')
     const [location, setLocation] = useState('')
     const [profileImgUrl, setprofileImgUrl] = useState('')
+    const [birthday, setBirthday] = useState('')
+    const [gender, setGender] = useState(0)
 
     return (
         <div className='SignUpPage'>
@@ -40,9 +44,16 @@ export default function SignUpPage() {
             <input type='text' onChange={(e) => setLocation(e.target.value)}></input> <br />
             <span>Profile image:</span>
             <input type='text' onChange={(e) => setprofileImgUrl(e.target.value)}></input> <br />
+            <span>Birthday:</span>
+            <input type='date' onChange={(e) => setBirthday(e.target.value)}></input> <br />
+            <span>Gender:</span>
+            <input type="radio" name="gender" value='1' onChange={(e)=> setGender(e.target.value)}/>
+            <label>Male</label><br />
+            <input type="radio" name="gender" value="0" style={{marginLeft:40}} onChange={(e)=> setGender(e.target.value)}/>
+            <label>Female</label><br />
             <button onClick={signUp}>Sign Up</button> <br />
             <span>Already with us?</span>
             <Link to='/'>Login here!</Link>
         </div>
-    )
+                )
 }

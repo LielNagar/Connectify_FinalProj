@@ -6,10 +6,12 @@ import axios from 'axios';
 export default function AllPosts(props) {
   const { posts,setPosts } = useContext(PostContext)
   useEffect(() => {
-    axios.get(`http://localhost:53653/api/Posts/${props.user.Id}`).then((response)=>{
-      //console.log(response.data)
-      setPosts(response.data)
-    })
+    if(props.user.Id){
+      axios.get(`http://localhost:53653/api/Posts/${props.user.Id}`).then((response)=>{
+        //console.log(response.data)
+        setPosts(response.data)
+      })
+    }
   },[props.user.Id, setPosts])
 
 
