@@ -31,7 +31,7 @@ export default function HomePage() {
             <TextField style={{ width: '700px', marginTop: '5px', marginLeft: '27%', marginRight: '30%' }} multiline={true} rows={4} placeholder='leave us something....' onChange={(e) => setPost(e.target.value)} />
             <br />
             <Button variant="text" style={{ marginLeft: '47%', marginRight: '30%' }} onClick={() => addPost(post, user)}>Add Post!</Button>
-            <AllPosts user={user} />
+            <AllPosts user={user} state='feed'/>
         </div>
     )
 }

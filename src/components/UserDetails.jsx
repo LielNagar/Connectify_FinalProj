@@ -4,7 +4,7 @@ import UserCard from './UserCard'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import UsersCards from './UsersCards'
-import { getDialogContentTextUtilityClass } from '@mui/material'
+import { CiSettings } from 'react-icons/ci'
 
 const MySwal = withReactContent(Swal)
 
@@ -43,14 +43,15 @@ export default function UserDetails(props) {
         let year = today.getFullYear();
         let day = today.getDay();
         let age = year - date.getFullYear()
-        if(month < date.getMonth()) age--
+        if (month < date.getMonth()) age--
         return String(age)
     }
 
     return (
         <div className='UserDetails' style={{ float: 'left', width: '20%' }}>
             <img src={props.user.ProfileImgUrl ? props.user.ProfileImgUrl : 'har'}></img> <br />
-            <p>Name: {props.user.UserName ? props.user.UserName : 'No Name'}</p>
+            <span>Name: {props.user.UserName ? props.user.UserName : 'No Name'}</span>
+            {props.user.Id === userLogged.Id ?  <CiSettings style={{marginTop:50,display:'inline', marginLeft:100}} onClick={()=> alert('settings')} size="32px"/>:null}
             <p>Age: {props.user.Birthday ? calculateAge(props.user.Birthday) : 'No birth'}</p>
             <p>E-Mail: {props.user.Email ? props.user.Email : 'No mail'}</p>
             <p>Gender: {props.user.Gender ? 'Male' : 'Female'}</p>

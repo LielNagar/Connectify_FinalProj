@@ -19,7 +19,7 @@ export default function PostContextProvider(props) {
       Date: new Date()
     }).then((response) => {
       console.log(response.data)
-      if (response.status === 201) setPosts([...posts, response.data])
+      if (response.status === 201) setPosts([response.data,...posts])
     }).catch((error) => {
       console.log(error)
     })
