@@ -5,7 +5,7 @@ import { ConnectionContext } from "./ConnectionContext";
 import UserCard from "./UserCard";
 
 export default function UsersCards(props) {
-  const { users, setUsers, requests, setRequests } =
+  const { setUsers, requests, setRequests } =
     useContext(ConnectionContext);
 
   useEffect(() => {
@@ -19,6 +19,9 @@ export default function UsersCards(props) {
           console.log(error.response.data);
         }
       });
+      return (()=>{
+        setUsers([])
+      })
   }, []);
 
   if (props.pending) {
