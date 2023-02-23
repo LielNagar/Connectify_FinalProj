@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import UsersCards from './UsersCards';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios'
 
+import { ConnectionContext } from './ConnectionContext';
 import Header from './Header'
 import Menu from './Menu'
 import IconButton from "@material-ui/core/IconButton";
@@ -13,7 +14,18 @@ import TextField from '@mui/material/TextField';
 export default function Search(props) {
     const { state: user } = useLocation()
     const [name, setName] = useState('')
-    const [users, setUsers] = useState([])
+    const {users, setUsers} = useContext(ConnectionContext)
+
+    // useEffect(()=>{
+    //     axios.get(`http://localhost:53653/api/Users/${user.Id}/requests`).then((response)=>{
+    //         setRequests(response.data)
+    //         console.log('effect')
+    //     }).catch((error)=>{
+    //         if(error.response.status === 404){
+    //             console.log(error.response.data)
+    //         }
+    //     })
+    // },[])
 
     const search = () => {
         axios.get(`http://localhost:53653/api/Users/${user.Id}/search/${name}`).then((response) => {
@@ -37,7 +49,7 @@ export default function Search(props) {
                     label="Search your friends"
                     InputProps={{
                         endAdornment: (
-                            <InputAdornment>
+                            <InputAdornment position='start'>
                                 <IconButton onClick={search}>
                                     <SearchIcon />
                                 </IconButton>
