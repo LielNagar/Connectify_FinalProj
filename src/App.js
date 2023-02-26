@@ -7,9 +7,11 @@ import HomePage from './components/HomePage';
 import Search from './components/Search';
 import UserProfile from './components/UserProfile';
 
+import './style/myCSS.css'
+
 function App() {
   return (
-    <div className="App">
+    <div className="app">
       <BrowserRouter>
         <Routes>
           <Route exact path='/' element={<LoginPage />}></Route>
