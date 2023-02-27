@@ -46,8 +46,8 @@ export default function UserDetails(props) {
                   profileImgUrl={user.ProfileImgUrl}
                   pending={true}
                   currentId={props.user.Id}
-                  setFriends= {setFriends}
-                  friends= {friends}
+                  setFriends={setFriends}
+                  friends={friends}
                 />
               ))}
             </div>
@@ -62,14 +62,13 @@ export default function UserDetails(props) {
     let today = new Date();
     let month = today.getMonth();
     let year = today.getFullYear();
-    let day = today.getDay();
     let age = year - date.getFullYear();
     if (month < date.getMonth()) age--;
     return String(age);
   };
 
   return (
-    <div className="UserDetails" style={{ float: "left", width: "20%" }}>
+    <div className="UserDetails" style={{ float: "left", width: "15%", height:'90vh', borderRight:'2px solid #b4590e',marginTop:'50px ' }}>
       <img
         src={props.user.ProfileImgUrl ? props.user.ProfileImgUrl : "har"}
       ></img>{" "}

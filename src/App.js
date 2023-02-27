@@ -6,6 +6,7 @@ import SignUpPage from './components/SignUpPage';
 import HomePage from './components/HomePage';
 import Search from './components/Search';
 import UserProfile from './components/UserProfile';
+import Footer from './components/Footer';
 
 import './style/myCSS.css'
 
@@ -21,6 +22,7 @@ function App() {
           <Route exact path='/Profile/:userId' element={<UserProfile />}></Route>
         </Routes>
       </BrowserRouter>
+      <Footer />
     </div>
   );
 }
