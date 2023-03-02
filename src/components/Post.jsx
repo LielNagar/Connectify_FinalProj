@@ -10,7 +10,8 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 export default function Post(props) {
   const [likes, setlikes] = useState(props.likes || 0);
   const [isLiked, setIsLiked] = useState(props.isLiked || false);
-  const {setAsLiked, setAsFav } = useContext(PostContext);
+  const [isFav, setisFav] = useState(props.isFav || false);
+  const { setAsLiked, setAsFav, setAsUnFav } = useContext(PostContext);
 
   const formatDateTimeForPost = (datetime) => {
     datetime = new Date(datetime);
@@ -59,9 +60,22 @@ export default function Post(props) {
             <ThumbUpOffAltIcon color="primary" />
           </IconButton>
           <span>{likes}</span>
-          {props.isFav ? (
-            <StarBorderIcon style={{ color: "yellow" }}></StarBorderIcon>
-          ) : null}
+          {isFav ? (
+            <StarBorderIcon
+              style={{ color: "yellow" }}
+              onClick={async () => {
+                await setAsUnFav(props.id, props.userId);
+                setisFav(!isFav);
+              }}
+            ></StarBorderIcon>
+          ) : (
+            <StarBorderIcon
+              onClick={async () => {
+                await setAsFav(props.id, props.userId);
+                setisFav(!isFav);
+              }}
+            ></StarBorderIcon>
+          )}
         </CardActions>
       </div>
     </div>

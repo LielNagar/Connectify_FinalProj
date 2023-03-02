@@ -6,7 +6,6 @@ export const PostContext = createContext();
 
 export default function PostContextProvider(props) {
   const [posts, setPosts] = useState([]); //FOR ALL POSTS
-  const [favorite, setFavorite] = useState(false);
 
   const addPost = (post, user) => {
     if (post === "")
@@ -40,16 +39,23 @@ export default function PostContextProvider(props) {
       .catch((error) => console.log(error));
   };
 
-  const setAsFav = (postId, userId) => {
-    axios
+  const setAsFav = async (postId, userId) => {
+    await axios
       .post(`http://localhost:53653/api/Posts/Favorite/${postId}/${userId}`)
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error));
+  };
+
+  const setAsUnFav = async (postId, userId) => {
+    await axios
+      .delete(`http://localhost:53653/api/Posts/Favorite/${postId}/${userId}`)
       .then((response) => console.log(response))
       .catch((error) => console.log(error));
   };
 
   return (
     <PostContext.Provider
-      value={{ posts, addPost, setPosts, setAsLiked, setAsFav }}
+      value={{ posts, addPost, setPosts, setAsLiked, setAsFav, setAsUnFav }}
     >
       {props.children}
     </PostContext.Provider>
