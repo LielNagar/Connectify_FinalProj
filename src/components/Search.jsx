@@ -4,7 +4,6 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 
 import { ConnectionContext } from "./ConnectionContext";
-import Header from "./Header";
 import Menu from "./Menu";
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -48,11 +47,11 @@ export default function Search(props) {
 
   return (
     <div className="Search">
-      <Header user={user.UserName} />
       <Menu user={user} />
       <div id="searchArea">
         <TextField
           onChange={(e) => setName(e.target.value)}
+          style={{marginTop:120}}
           label="Search your friends"
           InputProps={{
             endAdornment: (

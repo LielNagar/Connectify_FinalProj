@@ -1,48 +1,114 @@
-import React, { useEffect } from 'react'
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
-import { IconButton } from '@mui/material';
-import { useState, useContext } from 'react';
-import myCSS from '../style/myCSS.css'
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import {Link} from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom";
+
+import { PostContext } from "./PostContext";
+import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
+import { IconButton } from "@mui/material";
+import CardActions from "@mui/material/CardActions";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 export default function Post(props) {
-    const [likes, setlikes] = useState(props.likes || 0)
+  const [likes, setlikes] = useState(props.likes || 0);
+  const [isLiked, setIsLiked] = useState(props.isLiked || false);
+  const [isFav, setisFav] = useState(props.isFav || false);
+  const { setAsLiked, setAsFav, setAsUnFav } = useContext(PostContext);
 
+  const formatDateTimeForPost = (datetime) => {
+    datetime = new Date(datetime);
     return (
-        <div className='Post'>
-            <Card sx={{ maxWidth: 700 }}>
-                <CardMedia
-                    component="img"
-                    height="200"
-                    image={props.profilerSrc}
-                    alt={props.userName}
-                />
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                        {props.userName +', '+ props.datetime}
-                    </Typography>
-                    <Typography variant="body2">
-                        {props.data}
-                    </Typography>
-                </CardContent>
-                <CardActions>
-                    <IconButton onClick={() => setlikes(prevLikes => prevLikes + 1)}>
-                        <ThumbUpOffAltIcon color='primary' />
-                    </IconButton>
-                    <span>{likes}</span>
-                </CardActions>
-                <Link to={`/Profile/${props.publisherId}`}> go to {props.userName} profile</Link>
-            </Card>
-        </div>
-    )
+      datetime.toDateString() + "\n" + datetime.toLocaleTimeString("it-IT")
+    );
+  };
+
+  return (
+    <div className="post">
+      <div className="image-container">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png"
+          style={{ width: "150px", height: "100px" }}
+        />
+      </div>
+      <div className="details-container">
+        <Link
+          to={`/Profile/${props.publisherId}`}
+          style={{
+            textDecoration: "none",
+            fontFamily: "Arial",
+            fontSize: "20px",
+            paddingBottom: "7px",
+            marginBottom: "6px",
+          }}
+        >
+          {props.userName}
+        </Link>
+        <br />
+        {formatDateTimeForPost(props.datetime)}
+      </div>
+      <div className="data-container">
+        <span>{props.data}</span>
+      </div>
+      <div className="options-container">
+        <CardActions>
+          <IconButton
+            disabled={isLiked}
+            onClick={() => {
+              setAsLiked(props.id, props.userId); //VIOLATION OF PRIMARY KEY!
+              setlikes((prevLikes) => prevLikes + 1);
+              setIsLiked(true);
+            }}
+          >
+            <ThumbUpOffAltIcon color="primary" />
+          </IconButton>
+          <span>{likes}</span>
+          {isFav ? (
+            <StarBorderIcon
+              style={{ color: "yellow" }}
+              onClick={async () => {
+                await setAsUnFav(props.id, props.userId);
+                setisFav(!isFav);
+              }}
+            ></StarBorderIcon>
+          ) : (
+            <StarBorderIcon
+              onClick={async () => {
+                await setAsFav(props.id, props.userId);
+                setisFav(!isFav);
+              }}
+            ></StarBorderIcon>
+          )}
+        </CardActions>
+      </div>
+    </div>
+  );
 }
 
-
-
+// return (
+//   <div className="Post">
+//     <Card sx={{ maxWidth: 700 }}>
+//       <CardMedia
+//         component="img"
+//         height="200"
+//         image={props.profilerSrc}
+//         alt={props.userName}
+//       />
+//       <CardContent>
+//         <Typography gutterBottom variant="h5" component="div">
+// <Link
+//   to={`/Profile/${props.publisherId}`}
+//   style={{ textDecoration: "none" }}
+// >
+//   {props.userName}
+// </Link>
+// , {formatDateTimeForPost(props.datetime)}
+//         </Typography>
+//         <Typography variant="body2">{props.data}</Typography>
+//       </CardContent>
+// <CardActions>
+//   <IconButton onClick={() => setlikes((prevLikes) => prevLikes + 1)}>
+//     <ThumbUpOffAltIcon color="primary" />
+//   </IconButton>
+//   <span>{likes}</span>
+// </CardActions>
+//     </Card>
+//   </div>
+// );

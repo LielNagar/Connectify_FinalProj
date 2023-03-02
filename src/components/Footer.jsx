@@ -1,9 +1,9 @@
-import React from 'react'
+import React from "react";
 
 export default function Footer() {
   return (
-    <div className='Footer'>
-    This app was created by Liel
+    <div className="footer">
+      <label style={{ margin: "auto", color:'	#b4590e' }}>This app was created by Liel</label>
     </div>
-  )
+  );
 }
