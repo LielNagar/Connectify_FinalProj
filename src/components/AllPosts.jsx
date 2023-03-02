@@ -8,6 +8,7 @@ import "../style/myCSS.css";
 export default function AllPosts(props) {
   const { posts, setPosts } = useContext(PostContext);
   useEffect(() => {
+    console.log('all post render')
     if (props.user.Id)
       if (props.state === "feed") {
         axios
@@ -18,12 +19,13 @@ export default function AllPosts(props) {
           });
       } else {
         axios
-          .get(`http://localhost:53653/api/Posts/${props.user.Id}/Wall`)
+          .get(`http://localhost:53653/api/Posts/${props.currentId}/Wall/${props.user.Id}`)
           .then((response) => {
             //console.log(response.data)
             setPosts(response.data);
           });
       }
+      return (()=> setPosts([]))
   }, [props.user.Id, setPosts]);
 
   return (

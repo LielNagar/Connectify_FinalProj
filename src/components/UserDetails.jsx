@@ -13,11 +13,11 @@ export default function UserDetails(props) {
   const userLogged = JSON.parse(localStorage.getItem("userLogged"));
 
   useEffect(() => {
+    console.log('user details render')
     if (props.user.Id) {
       axios
         .get(`http://localhost:53653/api/Users/${props.user.Id}/Friends`)
         .then((response) => {
-          console.log(response.data);
           setFriends(response.data);
         })
         .catch((error) => console.log(error));

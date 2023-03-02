@@ -5,9 +5,8 @@ import axios from "axios";
 export const PostContext = createContext();
 
 export default function PostContextProvider(props) {
-  const [posts, setPosts] = useState([]);
-  const [liked, setLiked] = useState(false)
-  const [favorite, setFavorite] = useState(false)
+  const [posts, setPosts] = useState([]); //FOR ALL POSTS
+  const [favorite, setFavorite] = useState(false);
 
   const addPost = (post, user) => {
     if (post === "")
@@ -36,7 +35,7 @@ export default function PostContextProvider(props) {
     axios
       .post(`http://localhost:53653/api/Posts/Likes/${postId}/${userId}`)
       .then((response) => {
-        if(response.status === 201) return true;
+        if (response.status === 201) return true;
       })
       .catch((error) => console.log(error));
   };

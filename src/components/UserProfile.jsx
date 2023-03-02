@@ -17,10 +17,11 @@ export default function UserProfile() {
 
   const [user, setUser] = useState({});
   useEffect(() => {
+    console.log('user Profie render')
     axios.get(`http://localhost:53653/api/Users/${userId}`).then((response) => {
       setUser(response.data);
     });
-  });
+  },[userId]);
 
   return (
     <div className="UserProfile">
@@ -47,7 +48,7 @@ export default function UserProfile() {
         >
           Add Post!
         </Button>
-        <AllPosts user={user} />
+        <AllPosts user={user} currentId={userLogged.Id}/>
       </div>
     </div>
   );
