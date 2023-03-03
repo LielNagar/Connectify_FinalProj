@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { PostContext } from "./PostContext";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
+import ThumbUpOffAltRoundedIcon from "@mui/icons-material/ThumbUpOffAltRounded";
 import { IconButton } from "@mui/material";
 import CardActions from "@mui/material/CardActions";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
@@ -11,7 +12,8 @@ export default function Post(props) {
   const [likes, setlikes] = useState(props.likes || 0);
   const [isLiked, setIsLiked] = useState(props.isLiked || false);
   const [isFav, setisFav] = useState(props.isFav || false);
-  const { setAsLiked, setAsFav, setAsUnFav } = useContext(PostContext);
+  const { setAsLiked, setAsFav, setAsUnFav, setAsUnLiked } =
+    useContext(PostContext);
 
   const formatDateTimeForPost = (datetime) => {
     datetime = new Date(datetime);
@@ -49,16 +51,27 @@ export default function Post(props) {
       </div>
       <div className="options-container">
         <CardActions>
-          <IconButton
-            disabled={isLiked}
-            onClick={() => {
-              setAsLiked(props.id, props.userId); //VIOLATION OF PRIMARY KEY!
-              setlikes((prevLikes) => prevLikes + 1);
-              setIsLiked(true);
-            }}
-          >
-            <ThumbUpOffAltIcon color="primary" />
-          </IconButton>
+          {isLiked ? (
+            <IconButton
+              onClick={async () => {
+                await setAsUnLiked(props.id, props.userId);
+                setlikes((prevLikes) => prevLikes - 1);
+                setIsLiked(false);
+              }}
+            >
+              <ThumbUpOffAltRoundedIcon color="primary" />
+            </IconButton>
+          ) : (
+            <IconButton
+              onClick={async () => {
+                await setAsLiked(props.id, props.userId);
+                setlikes((prevLikes) => prevLikes + 1);
+                setIsLiked(true);
+              }}
+            >
+              <ThumbUpOffAltIcon color="primary" />
+            </IconButton>
+          )}
           <span>{likes}</span>
           {isFav ? (
             <StarBorderIcon

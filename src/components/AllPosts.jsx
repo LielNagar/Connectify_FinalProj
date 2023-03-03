@@ -41,7 +41,7 @@ export default function AllPosts(props) {
           likes={post.Likes}
           dislikes={post.Dislikes}
           userName={post.UserName}
-          userId={props.user.Id}
+          userId={props.currentId}
           datetime={post.Date}
           profilerSrc="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png"
         />

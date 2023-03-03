@@ -7,7 +7,7 @@ export const PostContext = createContext();
 export default function PostContextProvider(props) {
   const [posts, setPosts] = useState([]); //FOR ALL POSTS
 
-  const addPost = (post, user) => {
+  const addPost = (post, user, onWall) => {
     if (post === "")
       return Swal.fire(
         "Didn't you forget something?",
@@ -20,6 +20,7 @@ export default function PostContextProvider(props) {
         content: post,
         UserName: user.UserName,
         Date: new Date(),
+        onWall
       })
       .then((response) => {
         console.log(response.data);
@@ -30,12 +31,19 @@ export default function PostContextProvider(props) {
       });
   };
 
-  const setAsLiked = (postId, userId) => {
+  const setAsLiked = async (postId, userId) => {
     axios
       .post(`http://localhost:53653/api/Posts/Likes/${postId}/${userId}`)
       .then((response) => {
         if (response.status === 201) return true;
       })
+      .catch((error) => console.log(error));
+  };
+
+  const setAsUnLiked = async (postId, userId) => {
+    axios
+      .delete(`http://localhost:53653/api/Posts/Likes/${postId}/${userId}`)
+      .then((response) => console.log(response))
       .catch((error) => console.log(error));
   };
 
@@ -55,7 +63,15 @@ export default function PostContextProvider(props) {
 
   return (
     <PostContext.Provider
-      value={{ posts, addPost, setPosts, setAsLiked, setAsFav, setAsUnFav }}
+      value={{
+        posts,
+        addPost,
+        setPosts,
+        setAsLiked,
+        setAsUnLiked,
+        setAsFav,
+        setAsUnFav,
+      }}
     >
       {props.children}
     </PostContext.Provider>

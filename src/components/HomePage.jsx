@@ -37,7 +37,7 @@ export default function HomePage() {
       >
         Add Post!
       </Button>
-      <AllPosts user={user} state="feed" />
+      <AllPosts user={user} state="feed" currentId={user.Id}/>
     </div>
   );
 }

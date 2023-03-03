@@ -44,7 +44,7 @@ export default function UserProfile() {
         <Button
           variant="text"
           style={{ marginLeft: "47%", marginRight: "30%" }}
-          onClick={() => addPost(post, userLogged)}
+          onClick={() => addPost(post, userLogged, userId)}
         >
           Add Post!
         </Button>
