@@ -17,11 +17,23 @@ export default function UserProfile() {
 
   const [user, setUser] = useState({});
   useEffect(() => {
-    console.log('user Profie render')
-    axios.get(`http://localhost:53653/api/Users/${userId}`).then((response) => {
-      setUser(response.data);
-    });
-  },[userId]);
+    console.log("user Profie render");
+    let userToShow;
+    axios
+      .get(`http://localhost:53653/api/Users/${userId}`)
+      .then(async (response) => {
+        if (response.status === 200) {
+          userToShow = response.data;
+          await axios
+            .get(`http://localhost:8080/users/${userId}`)
+            .then((response) => {
+              if (response.status === 200)
+                userToShow.Avatar = response.data.avatar;
+            });
+        }
+        setUser(userToShow);
+      });
+  }, [userId]);
 
   return (
     <div className="UserProfile">
@@ -48,7 +60,7 @@ export default function UserProfile() {
         >
           Add Post!
         </Button>
-        <AllPosts user={user} currentId={userLogged.Id}/>
+        <AllPosts user={user} currentId={userLogged.Id} />
       </div>
     </div>
   );

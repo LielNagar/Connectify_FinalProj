@@ -13,7 +13,7 @@ export default function UserDetails(props) {
   const userLogged = JSON.parse(localStorage.getItem("userLogged"));
 
   useEffect(() => {
-    console.log('user details render')
+    console.log("user details render");
     if (props.user.Id) {
       axios
         .get(`http://localhost:53653/api/Users/${props.user.Id}/Friends`)
@@ -67,20 +67,48 @@ export default function UserDetails(props) {
     return String(age);
   };
 
+  const toBase64 = (arr) => {
+    return btoa(
+      arr.data.reduce((data, byte) => data + String.fromCharCode(byte), "")
+    );
+  };
+
   return (
-    <div className="UserDetails" style={{ float: "left", width: "15%", height:'90vh', borderRight:'2px solid #b4590e',marginTop:'50px ' }}>
-      <img
-        src={props.user.ProfileImgUrl ? props.user.ProfileImgUrl : "har"}
-      ></img>{" "}
-      <br />
-      <span>Name: {props.user.UserName ? props.user.UserName : "No Name"}</span>
+    <div
+      className="UserDetails"
+      style={{
+        float: "left",
+        width: "250px",
+        height: "100%",
+        borderRight: "2px solid #b4590e",
+        marginTop: "60px",
+        marginBottom: "20px"
+      }}
+    >
       {props.user.Id === userLogged.Id ? (
         <CiSettings
-          style={{ marginTop: 50, display: "inline", marginLeft: 100 }}
+          style={{ marginTop: 50, display: "inline", position:'fixed', left:0}}
           onClick={() => alert("settings")}
           size="32px"
         />
       ) : null}
+      <img
+      style={{marginTop:80}}
+        src={
+          props.user.Avatar
+            ? `data:image/png;base64,${toBase64(props.user.Avatar)}`
+            : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png"
+        }
+      ></img>{" "}
+      <br />
+      {props.user.Avatar ? (
+        <div>
+          <button>Change Profile Picture</button>
+        </div>
+      ) : (
+        <div><button>Upload New Profile Picture</button></div>
+      )}
+      <span>Name: {props.user.UserName ? props.user.UserName : "No Name"}</span>
       <p>
         Age:{" "}
         {props.user.Birthday ? calculateAge(props.user.Birthday) : "No birth"}
@@ -107,6 +135,7 @@ export default function UserDetails(props) {
           Pending Friend Requests
         </button>
       ) : null}
+      <p>Connections: aka brother of... to be continued....asdada dada dasdas dasda s das dasd adasdasd asdasdasda Connections: aka brother of... to be continued....asdada dada dasdas dasda s das dasd adasdasd asdasdasdad Connections: aka brother of... to be continued....asdada dada dasdas dasda s das dasd adasdasd asdasdasdadd</p>
     </div>
   );
 }

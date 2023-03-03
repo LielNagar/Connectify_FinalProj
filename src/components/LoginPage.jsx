@@ -13,10 +13,18 @@ export default function LoginPage() {
         email: email.toLowerCase(),
         password: password.toLowerCase(),
       })
-      .then((response) => {
+      .then(async (response) => {
         if (response.status === 200) {
-          localStorage.setItem("userLogged", JSON.stringify(response.data));
-          navigate("/Homepage", { state: response.data, replace: true });
+          let userToReturn = response.data;
+          await axios
+            .get(`http://localhost:8080/users/${response.data.Id}`)
+            .then((response) => {
+              if (response.status === 200) {
+                userToReturn.Avatar = response.data.avatar;
+              }
+              localStorage.setItem("userLogged", JSON.stringify(userToReturn));
+              navigate("/Homepage", { state: userToReturn, replace: true });
+            });
         }
       })
       .catch((error) => {
