@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { PostContext } from "./PostContext";
@@ -7,11 +7,14 @@ import ThumbUpOffAltRoundedIcon from "@mui/icons-material/ThumbUpOffAltRounded";
 import { IconButton } from "@mui/material";
 import CardActions from "@mui/material/CardActions";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
+import axios from "axios";
 
 export default function Post(props) {
   const [likes, setlikes] = useState(props.likes || 0);
   const [isLiked, setIsLiked] = useState(props.isLiked || false);
   const [isFav, setisFav] = useState(props.isFav || false);
+  const [profilerSrc, setProfilerSrc] = useState("");
+
   const { setAsLiked, setAsFav, setAsUnFav, setAsUnLiked } =
     useContext(PostContext);
 
@@ -22,11 +25,29 @@ export default function Post(props) {
     );
   };
 
+  const toBase64 = (arr) => {
+    return btoa(
+      arr.data.reduce((data, byte) => data + String.fromCharCode(byte), "")
+    );
+  };
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8080/users/${props.publisherId}`)
+      .then((response) => {
+        if (response.status === 200) setProfilerSrc(response.data.avatar);
+      });
+  }, []);
+
   return (
     <div className="post">
       <div className="image-container">
         <img
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png"
+          src={
+            profilerSrc
+              ? `data:image/png;base64,${toBase64(profilerSrc)}`
+              : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png"
+          }
           style={{ width: "150px", height: "100px" }}
         />
       </div>

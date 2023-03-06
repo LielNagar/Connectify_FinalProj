@@ -16,6 +16,8 @@ export default function UserProfile() {
   const { addPost } = useContext(PostContext);
 
   const [user, setUser] = useState({});
+  const [isRender, setIsRender] = useState(false);
+
   useEffect(() => {
     console.log("user Profie render");
     let userToShow;
@@ -33,12 +35,26 @@ export default function UserProfile() {
         }
         setUser(userToShow);
       });
-  }, [userId]);
+  }, [userId, setIsRender, isRender]);
+
+  const saveImg = async (file, userId) => {
+    console.log(file);
+    let formData = new FormData();
+    formData.append("avatar", file);
+    await axios
+      .post(`http://localhost:8080/users/${userId}/avatar`, formData)
+      .then((response) => {
+        if (response.status === 200) setIsRender(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <div className="UserProfile">
       <Menu user={userLogged} />
-      <UserDetails user={user} />
+      <UserDetails user={user} saveImg={saveImg} />
       <div style={{ float: "left" }}>
         <TextField
           style={{

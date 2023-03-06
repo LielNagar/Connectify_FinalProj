@@ -10,11 +10,9 @@ const MySwal = withReactContent(Swal);
 
 export default function UserDetails(props) {
   const [friends, setFriends] = useState([]);
-  const [avatar, setAvatar] = useState(props.user.Avatar);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [changeProfilePicture, setChangeProfilePicture] = useState(false);
   const userLogged = JSON.parse(localStorage.getItem("userLogged"));
-
-  const savedAvatar = props.user.Avatar;
 
   useEffect(() => {
     console.log("user details render");
@@ -78,20 +76,6 @@ export default function UserDetails(props) {
     );
   };
 
-  const saveImg = async (file, userId) => {
-    console.log(file);
-    let formData = new FormData();
-    formData.append("avatar", file);
-    await axios
-      .post(`http://localhost:8080/users/${userId}/avatar`, formData)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
   return (
     <div
       className="UserDetails"
@@ -126,7 +110,44 @@ export default function UserDetails(props) {
                 : `data:image/png;base64,${toBase64(props.user.Avatar)}`
             }
           />
-          <button>Change Profile Picture</button>
+          {changeProfilePicture ? (
+            <div>
+              {selectedImage ? (
+                <div>
+                  <button onClick={() => setSelectedImage("")}>Remove</button>
+                  <button
+                    onClick={(event) => {
+                      props.saveImg(selectedImage, props.user.Id);
+                      setChangeProfilePicture(false);
+                    }}
+                  >
+                    Save
+                  </button>
+                  <br />
+                  <br />
+                </div>
+              ) : null}
+              <input
+                type="file"
+                name="myImage"
+                onChange={(event) => {
+                  console.log(event.target.files[0]);
+                  setSelectedImage(event.target.files[0]);
+                }}
+              />
+              <br />
+              <button onClick={() => {
+                setChangeProfilePicture(false)
+                setSelectedImage(null)
+              }}>
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <button onClick={() => setChangeProfilePicture(true)}>
+              Change Profile Picture
+            </button>
+          )}
         </div>
       ) : (
         <div>
@@ -142,9 +163,9 @@ export default function UserDetails(props) {
           <br />
           {selectedImage ? (
             <div>
-              <button onClick={() => setSelectedImage(null)}>Remove</button>
+              <button onClick={() => setSelectedImage("")}>Remove</button>
               <button
-                onClick={(event) => saveImg(selectedImage, props.user.Id)}
+                onClick={(event) => props.saveImg(selectedImage, props.user.Id)}
               >
                 Save
               </button>
