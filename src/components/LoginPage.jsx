@@ -6,17 +6,25 @@ import Swal from "sweetalert2";
 import "../style/myCSS.css";
 
 export default function LoginPage() {
-  const Login = (e) => {
+  const Login = async (e) => {
     e.preventDefault();
-    axios
+    await axios
       .post(`http://localhost:53653/api/Users/login`, {
         email: email.toLowerCase(),
         password: password.toLowerCase(),
       })
-      .then((response) => {
+      .then(async (response) => {
         if (response.status === 200) {
-          localStorage.setItem("userLogged", JSON.stringify(response.data));
-          navigate("/Homepage", { state: response.data, replace: true });
+          let userToReturn = response.data;
+          await axios
+            .get(`http://localhost:8080/users/${response.data.Id}`)
+            .then((response) => {
+              if (response.status === 200) {
+                userToReturn.Avatar = response.data.avatar;
+              }
+              localStorage.setItem("userLogged", JSON.stringify(userToReturn));
+              navigate("/Homepage", { state: userToReturn, replace: true });
+            });
         }
       })
       .catch((error) => {

@@ -5,9 +5,9 @@ import axios from "axios";
 
 export default function SignUpPage() {
   const navigate = useNavigate();
-  const signUp = (e) => {
+  const signUp = async (e) => {
     e.preventDefault();
-    axios
+    await axios
       .post("http://localhost:53653/api/Users", {
         email,
         password,
@@ -16,11 +16,21 @@ export default function SignUpPage() {
         birthday,
         gender,
       })
-      .then((response) => {
+      .then(async (response) => {
         if (response.status === 201) {
-          console.log(response.data);
-          localStorage.setItem("userLogged", JSON.stringify(response.data));
-          navigate("/Homepage", { state: response.data });
+          let userToReturn = response.data;
+          await axios
+            .post("http://localhost:8080/user", {
+              id: userToReturn.Id,
+              userName,
+              location,
+              email
+            })
+            .then((response) => {
+              if (response.status === 201);
+              localStorage.setItem("userLogged", JSON.stringify(userToReturn));
+              navigate("/Homepage", { state: userToReturn });
+            });
         }
       })
       .catch((error) => console.log(error));

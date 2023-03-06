@@ -26,7 +26,7 @@ export default function AllPosts(props) {
           });
       }
       return (()=> setPosts([]))
-  }, [props.user.Id, setPosts]);
+  }, [props.user.Id, setPosts,props.currentId,props.state]);
 
   return (
     <div className="all-posts">
