@@ -23,7 +23,7 @@ a:visited {
     padding: 10px 20px;
 }
 
-.all-posts{
+.all-posts {
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -32,34 +32,35 @@ a:visited {
 .post {
     width: 550px;
     border: 1px solid black;
+    margin: auto;
     margin-top: 10px;
     padding-top: 10px;
     padding-bottom: 10px;
-    margin-left: 430px;
+
 }
 
-.post:last-child{
+.post:last-child {
     margin-bottom: 25px;
 }
 
-.image-container{
-    border-right:2px solid #b4590e;
+.image-container {
+    border-right: 2px solid #b4590e;
     width: 150px;
     float: left;
 }
 
-.options-container{
+.options-container {
     display: flex;
     flex-direction: column;
 }
 
-.details-container{
+.details-container {
     padding-left: 10px;
     width: 25%;
     float: left;
 }
 
-.data-container{
+.data-container {
     width: 30%;
     float: left;
 }
