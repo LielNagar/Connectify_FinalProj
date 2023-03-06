@@ -37,7 +37,7 @@ export default function Post(props) {
       .then((response) => {
         if (response.status === 200) setProfilerSrc(response.data.avatar);
       });
-  }, []);
+  }, [props.publisherId]);
 
   return (
     <div className="post">
@@ -49,6 +49,7 @@ export default function Post(props) {
               : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png"
           }
           style={{ width: "150px", height: "100px" }}
+          alt='No Pic'
         />
       </div>
       <div className="details-container">

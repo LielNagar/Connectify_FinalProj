@@ -16,7 +16,6 @@ export default function UserDetails(props) {
 
   useEffect(() => {
     console.log("user details render");
-    console.log(props.user);
     if (props.user.Id) {
       axios
         .get(`http://localhost:53653/api/Users/${props.user.Id}/Friends`)
@@ -109,6 +108,7 @@ export default function UserDetails(props) {
                 ? URL.createObjectURL(selectedImage)
                 : `data:image/png;base64,${toBase64(props.user.Avatar)}`
             }
+            alt='No Pic'
           />
           {changeProfilePicture ? (
             <div>
@@ -158,6 +158,7 @@ export default function UserDetails(props) {
                 ? URL.createObjectURL(selectedImage)
                 : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png"
             }
+            alt= 'No Pic'
           ></img>{" "}
           <br />
           <br />
