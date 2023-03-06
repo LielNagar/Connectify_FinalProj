@@ -6,9 +6,9 @@ import Swal from "sweetalert2";
 import "../style/myCSS.css";
 
 export default function LoginPage() {
-  const Login = (e) => {
+  const Login = async (e) => {
     e.preventDefault();
-    axios
+    await axios
       .post(`http://localhost:53653/api/Users/login`, {
         email: email.toLowerCase(),
         password: password.toLowerCase(),

@@ -10,10 +10,15 @@ const MySwal = withReactContent(Swal);
 
 export default function UserDetails(props) {
   const [friends, setFriends] = useState([]);
+  const [avatar, setAvatar] = useState(props.user.Avatar);
+  const [selectedImage, setSelectedImage] = useState(null);
   const userLogged = JSON.parse(localStorage.getItem("userLogged"));
+
+  const savedAvatar = props.user.Avatar;
 
   useEffect(() => {
     console.log("user details render");
+    console.log(props.user);
     if (props.user.Id) {
       axios
         .get(`http://localhost:53653/api/Users/${props.user.Id}/Friends`)
@@ -73,6 +78,20 @@ export default function UserDetails(props) {
     );
   };
 
+  const saveImg = async (file, userId) => {
+    console.log(file);
+    let formData = new FormData();
+    formData.append("avatar", file);
+    await axios
+      .post(`http://localhost:8080/users/${userId}/avatar`, formData)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <div
       className="UserDetails"
@@ -82,31 +101,66 @@ export default function UserDetails(props) {
         height: "100%",
         borderRight: "2px solid #b4590e",
         marginTop: "60px",
-        marginBottom: "20px"
+        marginBottom: "20px",
       }}
     >
       {props.user.Id === userLogged.Id ? (
         <CiSettings
-          style={{ marginTop: 50, display: "inline", position:'fixed', left:0}}
+          style={{
+            marginTop: 50,
+            display: "inline",
+            position: "fixed",
+            left: 0,
+          }}
           onClick={() => alert("settings")}
           size="32px"
         />
       ) : null}
-      <img
-      style={{marginTop:80}}
-        src={
-          props.user.Avatar
-            ? `data:image/png;base64,${toBase64(props.user.Avatar)}`
-            : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png"
-        }
-      ></img>{" "}
-      <br />
       {props.user.Avatar ? (
         <div>
+          <img
+            style={{ marginTop: 80, width: 250 }}
+            src={
+              selectedImage
+                ? URL.createObjectURL(selectedImage)
+                : `data:image/png;base64,${toBase64(props.user.Avatar)}`
+            }
+          />
           <button>Change Profile Picture</button>
         </div>
       ) : (
-        <div><button>Upload New Profile Picture</button></div>
+        <div>
+          <img
+            style={{ marginTop: 80, width: 250 }}
+            src={
+              selectedImage
+                ? URL.createObjectURL(selectedImage)
+                : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png"
+            }
+          ></img>{" "}
+          <br />
+          <br />
+          {selectedImage ? (
+            <div>
+              <button onClick={() => setSelectedImage(null)}>Remove</button>
+              <button
+                onClick={(event) => saveImg(selectedImage, props.user.Id)}
+              >
+                Save
+              </button>
+              <br />
+              <br />
+            </div>
+          ) : null}
+          <input
+            type="file"
+            name="myImage"
+            onChange={(event) => {
+              console.log(event.target.files[0]);
+              setSelectedImage(event.target.files[0]);
+            }}
+          />
+        </div>
       )}
       <span>Name: {props.user.UserName ? props.user.UserName : "No Name"}</span>
       <p>
@@ -135,7 +189,13 @@ export default function UserDetails(props) {
           Pending Friend Requests
         </button>
       ) : null}
-      <p>Connections: aka brother of... to be continued....asdada dada dasdas dasda s das dasd adasdasd asdasdasda Connections: aka brother of... to be continued....asdada dada dasdas dasda s das dasd adasdasd asdasdasdad Connections: aka brother of... to be continued....asdada dada dasdas dasda s das dasd adasdasd asdasdasdadd</p>
+      <p>
+        Connections: aka brother of... to be continued....asdada dada dasdas
+        dasda s das dasd adasdasd asdasdasda Connections: aka brother of... to
+        be continued....asdada dada dasdas dasda s das dasd adasdasd asdasdasdad
+        Connections: aka brother of... to be continued....asdada dada dasdas
+        dasda s das dasd adasdasd asdasdasdadd
+      </p>
     </div>
   );
 }
