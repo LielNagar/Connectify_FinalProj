@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React from "react";
 import { useLocation } from "react-router-dom";
 
 //COMPONENTS
@@ -10,8 +10,6 @@ import DataPosts from "./DataPosts";
 export default function HomePage() {
   let { state: user } = useLocation();
   if(!user) user = JSON.parse(localStorage.getItem('userLogged'));
-  const [post, setPost] = useState("");
-  const { addPost } = useContext(PostContext);
 
   return (
     <div className="HomePage">
