@@ -8,13 +8,11 @@ export default function DataPosts(props) {
   const [post, setPost] = useState("");
   const { addPost } = useContext(PostContext);
   return (
-    <div>
+    <div style={{float:'left', width:'40%', marginLeft:'35%'}}>
       <TextField
         style={{
-          width: "700px",
+          width: "100%",
           marginTop: "120px",
-          marginLeft: "27%",
-          marginRight: "30%",
         }}
         multiline={true}
         rows={4}

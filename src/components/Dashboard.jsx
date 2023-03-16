@@ -2,6 +2,6 @@ import React from 'react'
 
 export default function Dashboard() {
   return (
-    <div>Dashboard</div>
+    <div style={{float:'left', marginTop:120, width:'25%'}}>Dashboard</div>
   )
 }
