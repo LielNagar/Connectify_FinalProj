@@ -16,7 +16,7 @@ export default function HomePage() {
       <Menu user={user} />
       <LiveChat user={user}/>
       <DataPosts user={user}/>
-      <Dashboard />
+      <Dashboard currentUserId={user.Id}/>
     </div>
   );
 }
