@@ -1,9 +1,11 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { ChatContext } from "../context/ChatContext";
 import axios from "axios";
 
 export default function SignUpPage() {
+  const { setCurrentUser } = useContext(ChatContext);
+
   const navigate = useNavigate();
   const signUp = async (e) => {
     e.preventDefault();
@@ -24,11 +26,12 @@ export default function SignUpPage() {
               id: userToReturn.Id,
               userName,
               location,
-              email
+              email,
             })
             .then((response) => {
               if (response.status === 201);
               localStorage.setItem("userLogged", JSON.stringify(userToReturn));
+              setCurrentUser(userToReturn);
               navigate("/Homepage", { state: userToReturn });
             });
         }

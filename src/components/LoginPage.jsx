@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-import "../style/myCSS.css";
+import { ChatContext } from "../context/ChatContext";
 
 export default function LoginPage() {
+  const { setCurrentUser } = useContext(ChatContext);
   const Login = async (e) => {
     e.preventDefault();
     await axios
@@ -23,6 +24,7 @@ export default function LoginPage() {
                 userToReturn.Avatar = response.data.avatar;
               }
               localStorage.setItem("userLogged", JSON.stringify(userToReturn));
+              setCurrentUser(userToReturn);
               navigate("/Homepage", { state: userToReturn, replace: true });
             });
         }

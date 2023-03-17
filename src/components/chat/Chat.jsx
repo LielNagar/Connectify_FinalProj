@@ -13,8 +13,8 @@ export default function Chat(props) {
         Chatting with {userChat? userChat.UserName: null}
         </span>
       </div>
-      <ChatMessages userChatId={userChat? userChat.id: null} currentUser={props.user}/>
-      <ChatInput userChatId={userChat? userChat.id: null} currentUser={props.user}/>
+      <ChatMessages userChatId={userChat? userChat.Id: null} currentUser={props.user}/>
+      <ChatInput userChatId={userChat? userChat.Id: null} currentUser={props.user}/>
     </div>
   );
 }

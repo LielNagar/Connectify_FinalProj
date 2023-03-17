@@ -1,9 +1,5 @@
-import React, { useEffect, useState, useContext } from "react";
-// import { ref, onValue, set, getDatabase, push } from "firebase/database";
-// import { database } from "../firebase/firebase";
-
+import React, { useState } from "react";
 import UserChat from "./UserChat";
-
 import axios from "axios";
 
 export default function ChatSearch(props) {
@@ -52,7 +48,6 @@ export default function ChatSearch(props) {
           onKeyUp={handleKey}
           value={userToSearch}
         />
-        <button onClick={() => handleSearch()}>Search</button>
       </div>
       {users
         ? users.map((user) => {

@@ -19,17 +19,17 @@ export default function ChatMessages(props) {
         );
       const db = getDatabase();
       const messages = ref(db, "chats/" + combinedId);
-      onValue(messages, (snapshot) => {
+      onValue(messages, (snapshot) => { 
         const data = snapshot.val();
         setMessages(data.messages);
       });
     }
-  }, [props.userChatId]);
+  }, [props.userChatId,props.currentUser.Id]);
   
   return (
     <div className="chatMessages">
       {Object.entries(messages).map((m) => (
-        <ChatMessage message={m} />
+        <ChatMessage message={m} key={m[0]} currentUserId={props.currentUser.Id}/>
       ))}
     </div>
   );
