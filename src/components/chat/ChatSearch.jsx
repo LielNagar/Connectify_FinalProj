@@ -1,8 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+
+import { ConnectionContext } from "../../context/ConnectionContext";
 import UserChat from "./UserChat";
 import axios from "axios";
 
 export default function ChatSearch(props) {
+  let { currentUser } = useContext(ConnectionContext);
+  if (!currentUser)
+    currentUser = JSON.parse(sessionStorage.getItem("userLogged"));
+
   const [userToSearch, setUserToSearch] = useState(""); //for textbox
   const [users, setUsers] = useState(null);
 
@@ -10,7 +16,7 @@ export default function ChatSearch(props) {
     try {
       await axios
         .get(
-          `http://localhost:53653/api/Users/${props.user.Id}/search/${userToSearch}`
+          `http://localhost:53653/api/Users/${currentUser.Id}/search/${userToSearch}`
         )
         .then(async (response) => {
           if (response.status === 200) {
@@ -52,49 +58,10 @@ export default function ChatSearch(props) {
       {users
         ? users.map((user) => {
             return (
-              <UserChat user={user} key={user.Id} currentUser={props.user} />
+              <UserChat user={user} key={user.Id} currentUser={currentUser} />
             );
           })
         : null}
     </div>
   );
 }
-
-// useEffect(()=>{
-//   console.log('usersFounds')
-// },[users])
-
-// const handleSelect = async (userId) => {
-//   await getUserChatDetails(userId)
-//   console.log(userChat)
-//   let combinedId = "";
-//   if (userId < props.user.Id)
-//     combinedId = String(userId).concat(String(props.user.Id));
-//   else combinedId = String(props.user.Id).concat(String(userId));
-//   const res = ref(database, "chats/" + combinedId); //NEED TO TAKE HERE THE MESSAEGS INSTEAD??
-//   let data;
-//   onValue(res, (snapshot) => {
-//     data = snapshot.val();
-//     console.log(data);
-//   });
-//   if (!data) {
-//     // NO CHAT HISTORY INIT WITH A MESSAGE SO CREATE /CHATS/COMBINEDID AND /USERSCHAT/CURRENTID/USERID
-//     const db = getDatabase();
-//     console.log(combinedId);
-//     const date = new Date();
-
-//     const postListRef = ref(db, "chats/" + combinedId + "/messages");
-//     const newPostRef = push(postListRef);
-//     set(newPostRef, {
-//       senderId: "INIT",
-//       date: new Date().toDateString(),
-//       data: "No Messages Yet...",
-//     });
-//     await set(
-//       ref(db, "userChats/" + props.user.Id + "/" + userId),
-//       userChat
-//     );
-//   }
-//   setUserToSearch("");
-//   setUsers([]);
-// };

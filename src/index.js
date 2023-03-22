@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import ConnectionContextProvider from "./components/ConnectionContext";
-import PostContextProvider from "./components/PostContext";
+import ConnectionContextProvider from "./context/ConnectionContext";
+import PostContextProvider from "./context/PostContext";
 import ChatContextProvider from "./context/ChatContext";
 import ImageContextProvider from "./context/ImageContext";
 

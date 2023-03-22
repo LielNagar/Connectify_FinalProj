@@ -3,10 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-import { ChatContext } from "../context/ChatContext";
+// import { ChatContext } from "../context/ChatContext";
+import { ConnectionContext } from "../context/ConnectionContext";
 
 export default function LoginPage() {
-  const { setCurrentUser } = useContext(ChatContext);
+  // const { setCurrentUser } = useContext(ChatContext);
+  const {setCurrentUser} = useContext(ConnectionContext);
+  
   const Login = async (e) => {
     e.preventDefault();
     await axios
@@ -23,7 +26,7 @@ export default function LoginPage() {
               if (response.status === 200) {
                 userToReturn.Avatar = response.data.avatar;
               }
-              localStorage.setItem("userLogged", JSON.stringify(userToReturn));
+              sessionStorage.setItem("userLogged", JSON.stringify(userToReturn));
               setCurrentUser(userToReturn);
               navigate("/Homepage", { state: userToReturn, replace: true });
             });

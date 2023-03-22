@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 export const ConnectionContext = createContext();
 
 export default function ConnectionContextProvider(props) {
+  const [currentUser, setCurrentUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [requests, setRequests] = useState([]);
 
@@ -137,6 +138,8 @@ export default function ConnectionContextProvider(props) {
         confirmFriendRequest,
         denyFriendRequest,
         addFriend,
+        currentUser,
+        setCurrentUser
       }}
     >
       {props.children}

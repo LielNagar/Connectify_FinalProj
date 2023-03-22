@@ -2,7 +2,8 @@ import React, { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-import { PostContext } from "./PostContext";
+import { ConnectionContext } from "../context/ConnectionContext";
+import { PostContext } from "../context/PostContext";
 import { ImageContext } from "../context/ImageContext";
 
 import TextField from "@mui/material/TextField";
@@ -12,8 +13,10 @@ import UserDetails from "./UserDetails";
 import AllPosts from "./AllPosts";
 
 export default function UserProfile() {
-  const userLogged = JSON.parse(localStorage.getItem("userLogged"));
-  const { userId } = useParams();
+  let {currentUser} = useContext(ConnectionContext)
+  if(!currentUser) currentUser = JSON.parse(sessionStorage.getItem('userLogged'));
+
+  const { userProfileId } = useParams();
   const [post, setPost] = useState("");
   const { addPost } = useContext(PostContext);
 
@@ -23,12 +26,12 @@ export default function UserProfile() {
   useEffect(() => {
     let userToShow;
     axios
-      .get(`http://localhost:53653/api/Users/${userId}`)
+      .get(`http://localhost:53653/api/Users/${userProfileId}`)
       .then(async (response) => {
         if (response.status === 200) {
           userToShow = response.data;
           await axios
-            .get(`http://localhost:8080/users/${userId}`)
+            .get(`http://localhost:8080/users/${userProfileId}`)
             .then((response) => {
               if (response.status === 200)
                 userToShow.Avatar = response.data.avatar;
@@ -36,11 +39,11 @@ export default function UserProfile() {
         }
         setUser(userToShow);
       });
-  }, [userId, isRender]);
+  }, [userProfileId, isRender]);
 
   return (
     <div className="UserProfile">
-      <Menu user={userLogged} />
+      <Menu />
       <UserDetails user={user} />
       <div style={{ float: "left" }}>
         <TextField
@@ -59,11 +62,11 @@ export default function UserProfile() {
         <Button
           variant="text"
           style={{ marginLeft: "47%", marginRight: "30%" }}
-          onClick={() => addPost(post, userLogged, userId)}
+          onClick={() => addPost(post, currentUser, userProfileId)}
         >
           Add Post!
         </Button>
-        <AllPosts user={user} currentId={userLogged.Id} />
+        <AllPosts currentId={currentUser.Id} />
       </div>
     </div>
   );

@@ -1,22 +1,28 @@
 import React, { useContext } from "react";
+
+import { ConnectionContext } from "../../context/ConnectionContext";
+import { ChatContext } from "../../context/ChatContext";
+
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 
-import { ChatContext } from "../../context/ChatContext";
-
-export default function Chat(props) {
+export default function Chat() {
   const { userChat } = useContext(ChatContext);
+  let { currentUser } = useContext(ConnectionContext);
+  if (!currentUser)
+    currentUser = JSON.parse(sessionStorage.getItem("userLogged"));
+
   return (
     <div className="chat">
       <div className="chatInfo">
-        <span>
-        Chatting with {userChat? userChat.UserName: null}
-        </span>
+        <span>Chatting with {userChat ? userChat.UserName : null}</span>
       </div>
-      <ChatMessages userChatId={userChat? userChat.Id: null} currentUser={props.user}/>
-      <ChatInput userChatId={userChat? userChat.Id: null} currentUser={props.user}/>
+      <ChatMessages
+        userChatId={userChat ? userChat.Id : null}
+      />
+      <ChatInput
+        userChatId={userChat ? userChat.Id : null}
+      />
     </div>
   );
 }
-// {userChat.displayName?  userChat.displayName: 'a'}
-// 

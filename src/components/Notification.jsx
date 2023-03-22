@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+
 import UserCardPending from "./UserCardPending";
 
 export default function Notification(props) {
   const [birthdayCelebrators, setBirthdayCelebrators] = useState([]);
   const [penders, setPenders] = useState([]);
+
   useEffect(() => {
     axios
       .get(`http://localhost:53653/api/Users/${props.currentUserId}/dashboard`)
@@ -22,6 +24,7 @@ export default function Notification(props) {
       })
       .catch((error) => console.log(error));
   }, [props.currentUserId]);
+
   return (
     <div>
       current user{props.currentUserId}
@@ -45,7 +48,7 @@ export default function Notification(props) {
             key={pender.Id}
             id={pender.Id}
             userName={pender.UserName}
-            gender={props.Gender}
+            gender={pender.Gender}
             currentId={props.currentUserId}
           />
         ))}

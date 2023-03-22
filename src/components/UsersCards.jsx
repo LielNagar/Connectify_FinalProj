@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from "react";
 import axios from "axios";
 
-import { ConnectionContext } from "./ConnectionContext";
+import { ConnectionContext } from "../context/ConnectionContext";
 import UserCard from "./UserCard";
 
 export default function UsersCards(props) {

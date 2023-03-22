@@ -14,12 +14,10 @@ export default function UserDetails(props) {
   const [friends, setFriends] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [changeProfilePicture, setChangeProfilePicture] = useState(false);
-  const userLogged = JSON.parse(localStorage.getItem("userLogged"));
-
   const {saveImg, toBase64} = useContext(ImageContext)
+  const userLogged = JSON.parse(sessionStorage.getItem("userLogged"));
 
   useEffect(() => {
-    console.log("user details render");
     if (props.user.Id) {
       axios
         .get(`http://localhost:53653/api/Users/${props.user.Id}/Friends`)

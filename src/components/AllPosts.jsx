@@ -1,17 +1,22 @@
 import React, { useEffect, useContext } from "react";
-import Post from "./Post";
-import { PostContext } from "./PostContext";
 import axios from "axios";
 
-import "../style/myCSS.css";
+import { ConnectionContext } from "../context/ConnectionContext";
+import { PostContext } from "../context/PostContext";
+
+import Post from "./Post";
 
 export default function AllPosts(props) {
+  let { currentUser } = useContext(ConnectionContext);
+  if (!currentUser)
+    currentUser = JSON.parse(sessionStorage.getItem("userLogged"));
   const { posts, setPosts } = useContext(PostContext);
+
   useEffect(() => {
-    if (props.user.Id)
+    if (currentUser.Id)
       if (props.state === "feed") {
         axios
-          .get(`http://localhost:53653/api/Posts/${props.user.Id}`)
+          .get(`http://localhost:53653/api/Posts/${currentUser.Id}`)
           .then((response) => {
             //console.log(response.data)
             setPosts(response.data);
@@ -19,7 +24,7 @@ export default function AllPosts(props) {
       } else {
         axios
           .get(
-            `http://localhost:53653/api/Posts/${props.currentId}/Wall/${props.user.Id}`
+            `http://localhost:53653/api/Posts/${props.currentId}/Wall/${currentUser.Id}`
           )
           .then((response) => {
             //console.log(response.data)
@@ -27,7 +32,7 @@ export default function AllPosts(props) {
           });
       }
     return () => setPosts([]);
-  }, [props.user.Id, setPosts, props.currentId, props.state]);
+  }, [currentUser.Id, setPosts, props.currentId, props.state]);
 
   return (
     <div className="all-posts">

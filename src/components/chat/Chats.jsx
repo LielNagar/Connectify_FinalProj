@@ -1,19 +1,25 @@
 import React, { useEffect, useState, useContext } from "react";
 import { getDatabase, ref, onValue } from "firebase/database";
+
+import { ConnectionContext } from "../../context/ConnectionContext";
 import { ChatContext } from "../../context/ChatContext";
 
-export default function Chats(props) {
+export default function Chats() {
   const [chats, setChats] = useState([]);
   const { setUserChat } = useContext(ChatContext);
 
+  let { currentUser } = useContext(ConnectionContext);
+  if (!currentUser)
+    currentUser = JSON.parse(sessionStorage.getItem("userLogged"));
+
   useEffect(() => {
     const db = getDatabase();
-    const chats = ref(db, "userChats/" + props.user.Id);
+    const chats = ref(db, "userChats/" + currentUser.Id);
     onValue(chats, (snapshot) => {
       const data = snapshot.val();
       setChats(data);
     });
-  }, [props.user.Id]);
+  }, [currentUser.Id]);
 
   const handleSelect = (chat) => {
     const user = {
@@ -54,7 +60,7 @@ export default function Chats(props) {
                     >
                       {chat[1].UserName}
                     </span>
-                    <p style={{ fontSize: 14, color: "rgb(70, 70, 70)"}}>
+                    <p style={{ fontSize: 14, color: "rgb(70, 70, 70)" }}>
                       {chat[1].LastMessage}
                     </p>
                   </div>

@@ -1,20 +1,22 @@
 import axios from "axios";
 import React, { useEffect, useContext } from "react";
-import { useLocation } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 
-import { PostContext } from "./PostContext";
+import { ConnectionContext } from "../context/ConnectionContext";
+import { PostContext } from "../context/PostContext";
 import Post from "./Post";
 import Menu from "./Menu";
 
-export default function FavoritePosts(props) {
+export default function FavoritePosts() {
   const { posts, setPosts } = useContext(PostContext);
-  let { state: user } = useLocation();
-  if (!user) user = JSON.parse(localStorage.getItem("userLogged"));
+  let { currentUser } = useContext(ConnectionContext);
+  if (!currentUser)
+    currentUser = JSON.parse(sessionStorage.getItem("userLogged"));
 
   useEffect(() => {
     axios
-      .get(`http://localhost:53653/api/Posts/${user.Id}/Favorite`)
+      .get(`http://localhost:53653/api/Posts/${currentUser.Id}/Favorite`)
       .then((response) => {
         if (response.status === 200) {
           console.log(response.data);
@@ -24,14 +26,14 @@ export default function FavoritePosts(props) {
       .catch((error) => {
         Swal.fire({
           icon: "error",
-          text: 'You have no favorite posts',
+          text: "You have no favorite posts",
           title: error.response.data,
         });
       });
-  }, [user.Id]);
+  }, [currentUser.Id, setPosts]);
   return (
     <div>
-      <Menu user={user} />
+      <Menu />
       <div style={{ marginTop: 120 }}>
         {posts &&
           posts.map((post) => (
@@ -45,7 +47,7 @@ export default function FavoritePosts(props) {
               likes={post.Likes}
               dislikes={post.Dislikes}
               userName={post.UserName}
-              userId={user.Id}
+              userId={currentUser.Id}
               datetime={post.Date}
             />
           ))}

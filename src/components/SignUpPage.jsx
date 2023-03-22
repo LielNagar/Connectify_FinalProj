@@ -1,10 +1,10 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ChatContext } from "../context/ChatContext";
 import axios from "axios";
+import { ConnectionContext } from "../context/ConnectionContext";
 
 export default function SignUpPage() {
-  const { setCurrentUser } = useContext(ChatContext);
+  const { setCurrentUser } = useContext(ConnectionContext);
 
   const navigate = useNavigate();
   const signUp = async (e) => {
@@ -30,7 +30,7 @@ export default function SignUpPage() {
             })
             .then((response) => {
               if (response.status === 201);
-              localStorage.setItem("userLogged", JSON.stringify(userToReturn));
+              sessionStorage.setItem("userLogged", JSON.stringify(userToReturn));
               setCurrentUser(userToReturn);
               navigate("/Homepage", { state: userToReturn });
             });

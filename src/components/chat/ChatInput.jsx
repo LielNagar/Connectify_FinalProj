@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { getDatabase, ref, push, set, update } from "firebase/database";
 import { storage } from "../../firebase/firebase";
 import { v4 as uuid } from "uuid";
@@ -8,15 +8,20 @@ import {
   ref as sRef,
 } from "firebase/storage";
 
+import { ConnectionContext } from "../../context/ConnectionContext";
+
 export default function ChatInput(props) {
   const [messageData, setMessageData] = useState("");
   const [img, setImg] = useState(null);
+  let { currentUser } = useContext(ConnectionContext);
+  if (!currentUser)
+    currentUser = JSON.parse(sessionStorage.getItem("userLogged"));
 
   let combinedId = "";
-  if (props.userChatId < props.currentUser.Id)
-    combinedId = String(props.userChatId).concat(String(props.currentUser.Id));
+  if (props.userChatId < currentUser.Id)
+    combinedId = String(props.userChatId).concat(String(currentUser.Id));
   else
-    combinedId = String(props.currentUser.Id).concat(String(props.userChatId));
+    combinedId = String(currentUser.Id).concat(String(props.userChatId));
 
   return (
     <div className="chatInput">
@@ -71,7 +76,7 @@ export default function ChatInput(props) {
             } else {
               await set(newMessageListRef, {
                 Data: messageData,
-                SenderId: props.currentUser.Id,
+                SenderId: currentUser.Id,
                 Date: new Date().toUTCString(),
               });
               const updates = {};
@@ -79,28 +84,28 @@ export default function ChatInput(props) {
                 "userChats/" +
                   props.userChatId +
                   "/" +
-                  props.currentUser.Id +
+                  currentUser.Id +
                   "/LastMessage"
               ] = messageData;
               updates[
                 "userChats/" +
-                  props.currentUser.Id +
+                  currentUser.Id +
                   "/" +
                   props.userChatId +
                   "/LastMessage"
               ] = messageData;
               updates[
                 "userChats/" +
-                  props.currentUser.Id +
+                  currentUser.Id +
                   "/" +
                   props.userChatId +
                   "/Date"
               ] = new Date().toUTCString();
               updates[
                 "userChats/" +
-                  props.userChatId+
+                  props.userChatId +
                   "/" +
-                  props.currentUser.Id +
+                  currentUser.Id +
                   "/Date"
               ] = new Date().toUTCString();
               await update(ref(db), updates);
