@@ -9,6 +9,7 @@ import UserProfile from './components/UserProfile';
 import Footer from './components/Footer';
 
 import './style/myCSS.css'
+import FavoritePosts from './components/FavoritePosts';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route exact path='/' element={<LoginPage />}></Route>
           <Route exact path='/SignUp' element={<SignUpPage />}></Route>
           <Route exact path='/Homepage' element={<HomePage />}></Route>
+          <Route exact path='/Posts/Favorites/:userId' element={<FavoritePosts />}></Route>
           <Route exact path='/Search' element={<Search />}></Route>
           <Route exact path='/Profile/:userId' element={<UserProfile />}></Route>
         </Routes>

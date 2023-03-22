@@ -39,6 +39,7 @@ a:visited {
 
 .post {
     width: 550px;
+    height: 100px;
     border: 1px solid black;
     margin: auto;
     margin-top: 10px;
