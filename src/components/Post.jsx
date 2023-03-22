@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { PostContext } from "./PostContext";
+import { ImageContext } from "../context/ImageContext";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbUpOffAltRoundedIcon from "@mui/icons-material/ThumbUpOffAltRounded";
 import { IconButton } from "@mui/material";
@@ -17,17 +18,12 @@ export default function Post(props) {
 
   const { setAsLiked, setAsFav, setAsUnFav, setAsUnLiked } =
     useContext(PostContext);
+  const { toBase64 } = useContext(ImageContext);
 
   const formatDateTimeForPost = (datetime) => {
     datetime = new Date(datetime);
     return (
       datetime.toDateString() + "\n" + datetime.toLocaleTimeString("it-IT")
-    );
-  };
-
-  const toBase64 = (arr) => {
-    return btoa(
-      arr.data.reduce((data, byte) => data + String.fromCharCode(byte), "")
     );
   };
 
@@ -49,7 +45,7 @@ export default function Post(props) {
               : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png"
           }
           style={{ width: "150px", height: "100px" }}
-          alt='No Pic'
+          alt="No Pic"
         />
       </div>
       <div className="details-container">
@@ -116,34 +112,3 @@ export default function Post(props) {
     </div>
   );
 }
-
-// return (
-//   <div className="Post">
-//     <Card sx={{ maxWidth: 700 }}>
-//       <CardMedia
-//         component="img"
-//         height="200"
-//         image={props.profilerSrc}
-//         alt={props.userName}
-//       />
-//       <CardContent>
-//         <Typography gutterBottom variant="h5" component="div">
-// <Link
-//   to={`/Profile/${props.publisherId}`}
-//   style={{ textDecoration: "none" }}
-// >
-//   {props.userName}
-// </Link>
-// , {formatDateTimeForPost(props.datetime)}
-//         </Typography>
-//         <Typography variant="body2">{props.data}</Typography>
-//       </CardContent>
-// <CardActions>
-//   <IconButton onClick={() => setlikes((prevLikes) => prevLikes + 1)}>
-//     <ThumbUpOffAltIcon color="primary" />
-//   </IconButton>
-//   <span>{likes}</span>
-// </CardActions>
-//     </Card>
-//   </div>
-// );

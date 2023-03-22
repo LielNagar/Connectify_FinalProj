@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import UserCard from "./UserCard";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import UserCardPending from "./UserCardPending";
 import { CiSettings } from "react-icons/ci";
+
+import { ImageContext } from "../context/ImageContext";
+import UserCard from "./UserCard";
+import UserCardPending from "./UserCardPending";
 
 const MySwal = withReactContent(Swal);
 
@@ -13,6 +15,8 @@ export default function UserDetails(props) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [changeProfilePicture, setChangeProfilePicture] = useState(false);
   const userLogged = JSON.parse(localStorage.getItem("userLogged"));
+
+  const {saveImg, toBase64} = useContext(ImageContext)
 
   useEffect(() => {
     console.log("user details render");
@@ -69,12 +73,6 @@ export default function UserDetails(props) {
     return String(age);
   };
 
-  const toBase64 = (arr) => {
-    return btoa(
-      arr.data.reduce((data, byte) => data + String.fromCharCode(byte), "")
-    );
-  };
-
   return (
     <div
       className="UserDetails"
@@ -117,7 +115,7 @@ export default function UserDetails(props) {
                   <button onClick={() => setSelectedImage("")}>Remove</button>
                   <button
                     onClick={(event) => {
-                      props.saveImg(selectedImage, props.user.Id);
+                      saveImg(selectedImage, props.user.Id);
                       setChangeProfilePicture(false);
                     }}
                   >
@@ -166,7 +164,7 @@ export default function UserDetails(props) {
             <div>
               <button onClick={() => setSelectedImage("")}>Remove</button>
               <button
-                onClick={(event) => props.saveImg(selectedImage, props.user.Id)}
+                onClick={(event) => saveImg(selectedImage, props.user.Id)}
               >
                 Save
               </button>

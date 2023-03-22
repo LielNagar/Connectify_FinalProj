@@ -22,7 +22,7 @@ export default function UsersCards(props) {
       return (()=>{
         setUsers([])
       })
-  }, []);
+  }, [setRequests,setUsers,props.currentId]);
 
   if (props.pending) {
     return (

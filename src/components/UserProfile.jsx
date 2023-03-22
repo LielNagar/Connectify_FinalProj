@@ -2,9 +2,11 @@ import React, { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+import { PostContext } from "./PostContext";
+import { ImageContext } from "../context/ImageContext";
+
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { PostContext } from "./PostContext";
 import Menu from "./Menu";
 import UserDetails from "./UserDetails";
 import AllPosts from "./AllPosts";
@@ -16,10 +18,9 @@ export default function UserProfile() {
   const { addPost } = useContext(PostContext);
 
   const [user, setUser] = useState({});
-  const [isRender, setIsRender] = useState(false);
+  const {isRender} = useContext(ImageContext)
 
   useEffect(() => {
-    console.log("user Profie render");
     let userToShow;
     axios
       .get(`http://localhost:53653/api/Users/${userId}`)
@@ -35,26 +36,12 @@ export default function UserProfile() {
         }
         setUser(userToShow);
       });
-  }, [userId, setIsRender, isRender]);
-
-  const saveImg = async (file, userId) => {
-    console.log(file);
-    let formData = new FormData();
-    formData.append("avatar", file);
-    await axios
-      .post(`http://localhost:8080/users/${userId}/avatar`, formData)
-      .then((response) => {
-        if (response.status === 200) setIsRender(true);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  }, [userId, isRender]);
 
   return (
     <div className="UserProfile">
       <Menu user={userLogged} />
-      <UserDetails user={user} saveImg={saveImg} />
+      <UserDetails user={user} />
       <div style={{ float: "left" }}>
         <TextField
           style={{
