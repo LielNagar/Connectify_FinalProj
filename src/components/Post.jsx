@@ -8,6 +8,7 @@ import ThumbUpOffAltRoundedIcon from "@mui/icons-material/ThumbUpOffAltRounded";
 import { IconButton } from "@mui/material";
 import CardActions from "@mui/material/CardActions";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
+import DeleteOutlineSharpIcon from "@mui/icons-material/DeleteOutlineSharp";
 
 export default function Post(props) {
   const [likes, setlikes] = useState(props.likes || 0);
@@ -15,8 +16,14 @@ export default function Post(props) {
   const [isFav, setisFav] = useState(props.isFav || false);
   const [profilerSrc, setProfilerSrc] = useState("");
 
-  const { setAsLiked, setAsFav, setAsUnFav, setAsUnLiked } =
-    useContext(PostContext);
+  const {
+    setAsLiked,
+    setAsFav,
+    setAsUnFav,
+    setAsUnLiked,
+    deletePost,
+    setPosts,
+  } = useContext(PostContext);
 
   const formatDateTimeForPost = (datetime) => {
     datetime = new Date(datetime);
@@ -30,7 +37,7 @@ export default function Post(props) {
     const userPic = ref(db, "users/" + props.publisherId);
     onValue(userPic, (snapshot) => {
       const data = snapshot.val();
-      if(data) setProfilerSrc(Object.entries(data)[0][1].Img);
+      if (data) setProfilerSrc( Object.entries(data)[Object.keys(data).length - 1][1].Img);
     });
   }, [props.publisherId]);
 
@@ -41,9 +48,9 @@ export default function Post(props) {
           src={
             profilerSrc
               ? profilerSrc
-              : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png"
+              : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd_A1KWEAF8xoaZLlOT1PbmJv2H-46t7witrnmDyA&s"
           }
-          style={{ width: "150px", height: "100px" }}
+          style={{ width: "150px", height: "100px", borderRadius:'50%' }}
           alt="No Pic"
         />
       </div>
@@ -105,6 +112,19 @@ export default function Post(props) {
                 setisFav(!isFav);
               }}
             ></StarBorderIcon>
+          )}
+          {props.userId === props.publisherId && (
+            <DeleteOutlineSharpIcon
+              onClick={() => {
+                deletePost(props.id);
+                setPosts((prevPosts) => {
+                  const newPosts = prevPosts.filter(
+                    (post) => post.Id !== props.id
+                  );
+                  return newPosts;
+                });
+              }}
+            />
           )}
         </CardActions>
       </div>

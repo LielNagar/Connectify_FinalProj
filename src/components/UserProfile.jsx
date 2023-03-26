@@ -18,8 +18,7 @@ export default function UserProfile() {
     currentUser = JSON.parse(sessionStorage.getItem("userLogged"));
 
   const { userProfileId } = useParams();
-  const [post, setPost] = useState("");
-  const { addPost } = useContext(PostContext);
+  const { addPost,setPostContent } = useContext(PostContext);
 
   const [user, setUser] = useState({});
   const { isRender } = useContext(ImageContext);
@@ -47,13 +46,13 @@ export default function UserProfile() {
           multiline={true}
           rows={4}
           placeholder="Tell us something...."
-          onChange={(e) => setPost(e.target.value)}
+          onChange={(e) => setPostContent(e.target.value)}
         />
         <br />
         <Button
           variant="text"
           style={{ marginLeft: "47%", marginRight: "30%" }}
-          onClick={() => addPost(post, currentUser, userProfileId)}
+          onClick={() => addPost(currentUser, userProfileId)}
         >
           Add Post!
         </Button>

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 
 import { ConnectionContext } from "../context/ConnectionContext";
 import { PostContext } from "../context/PostContext";
@@ -7,8 +7,7 @@ import Button from "@mui/material/Button";
 import AllPosts from "./AllPosts";
 
 export default function DataPosts() {
-  const [post, setPost] = useState("");
-  const { addPost } = useContext(PostContext);
+  const { addPost,setPostContent } = useContext(PostContext);
   let { currentUser } = useContext(ConnectionContext);
   if (!currentUser)
     currentUser = JSON.parse(sessionStorage.getItem("userLogged"));
@@ -23,13 +22,13 @@ export default function DataPosts() {
         multiline={true}
         rows={4}
         placeholder="Tell us something...."
-        onChange={(e) => setPost(e.target.value)}
+        onChange={(e) => setPostContent(e.target.value)}
       />
       <br />
       <Button
         variant="text"
         style={{ marginLeft: "47%", marginRight: "30%" }}
-        onClick={() => addPost(post, currentUser)}
+        onClick={() => addPost(currentUser)}
       >
         Add Post!
       </Button>

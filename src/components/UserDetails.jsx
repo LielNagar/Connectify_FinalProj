@@ -34,15 +34,17 @@ export default function UserDetails(props) {
       onValue(userPic, async (snapshot) => {
         const data = snapshot.val();
         if (data) {
-          if (Object.entries(data)[0][1].Img) {
-            setUserProfileImage(Object.entries(data)[0][1].Img);
+          if (Object.entries(data)[Object.keys(data).length - 1][1].Img) {
+            setUserProfileImage(
+              Object.entries(data)[Object.keys(data).length - 1][1].Img
+            );
           }
         } else {
           setUserProfileImage(null);
         }
       });
     }
-  }, [props.user.Id]);
+  }, [props.user.Id, setUserProfileImage]);
 
   const seePendingFriendsRequests = () => {
     axios
@@ -170,7 +172,7 @@ export default function UserDetails(props) {
             src={
               selectedImage
                 ? URL.createObjectURL(selectedImage)
-                : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png"
+                : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd_A1KWEAF8xoaZLlOT1PbmJv2H-46t7witrnmDyA&s"
             }
             alt="No Pic"
           ></img>{" "}

@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { getDatabase, ref, onValue } from "firebase/database";
 
 import { ConnectionContext } from "../../context/ConnectionContext";
 import UserChat from "./UserChat";
@@ -13,33 +14,42 @@ export default function ChatSearch(props) {
   const [users, setUsers] = useState(null);
 
   const handleSearch = async () => {
-    try {
-      await axios
-        .get(
-          `http://localhost:53653/api/Users/${currentUser.Id}/search/${userToSearch}`
-        )
-        .then(async (response) => {
-          if (response.status === 200) {
-            let usersToSet = [];
-            await response.data.map(async (user) => {
-              await axios
-                .get(`http://localhost:8080/users/${user.Id}`)
-                .then((response) => {
-                  user.Avatar = response.data.avatar;
+    await axios
+      .get(
+        `http://localhost:53653/api/Users/${currentUser.Id}/search/${userToSearch}`
+      )
+      .then(async (response) => {
+        if (response.status === 200) {
+          let usersToSet = [];
+          await response.data
+            .filter((user) => user.Id !== currentUser.Id)
+            .map(async (user) => {
+              const db = getDatabase();
+              const userPic = ref(db, "users/" + user.Id);
+              onValue(userPic, async (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                  if (
+                    Object.entries(data)[Object.keys(data).length - 1][1].Img
+                  ) {
+                    user.Avatar =
+                      Object.entries(data)[Object.keys(data).length - 1][1].Img;
+                    usersToSet.push(user);
+                  }
+                } else {
+                  user.Avatar = null;
                   usersToSet.push(user);
-                });
+                }
+              });
             });
-            setUsers(usersToSet);
-          }
-        });
-    } catch (err) {
-      console.log(err);
-    }
+          setUsers(usersToSet);
+        }
+      })
+      .catch((error) => console.log(error));
   };
 
   const handleKey = (e) => {
     if (e.key === "Enter") {
-      console.log("asdsd");
       handleSearch();
     }
   };

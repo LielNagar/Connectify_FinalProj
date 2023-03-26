@@ -7,6 +7,7 @@ import UserCardPending from "./UserCardPending";
 export default function Notification(props) {
   const [birthdayCelebrators, setBirthdayCelebrators] = useState([]);
   const [penders, setPenders] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     axios
@@ -22,12 +23,13 @@ export default function Notification(props) {
           setPenders(penders);
         }
       })
-      .catch((error) => console.log(error));
+      .catch((error) => setError(error));
   }, [props.currentUserId]);
 
   return (
     <div>
       current user{props.currentUserId}
+      {error && <p style={{textAlign:'center', fontWeight:'bold'}}>{error.response.data}</p>}
       {birthdayCelebrators &&
         birthdayCelebrators.map((celebrator) => {
           return (

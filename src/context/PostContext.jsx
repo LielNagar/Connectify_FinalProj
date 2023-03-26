@@ -6,9 +6,10 @@ export const PostContext = createContext();
 
 export default function PostContextProvider(props) {
   const [posts, setPosts] = useState([]); //FOR ALL POSTS
+  const [postContent, setPostContent] = useState('');
 
-  const addPost = (post, user, onWall) => {
-    if (post === "")
+  const addPost = (user, onWall) => {
+    if (postContent === "")
       return Swal.fire(
         "Didn't you forget something?",
         "What about putting some text in the post?",
@@ -17,10 +18,10 @@ export default function PostContextProvider(props) {
     axios
       .post("http://localhost:53653/api/Posts", {
         Publisher: user.Id,
-        content: post,
+        content: postContent,
         UserName: user.UserName,
         Date: new Date(),
-        onWall
+        onWall,
       })
       .then((response) => {
         console.log(response.data);
@@ -61,6 +62,15 @@ export default function PostContextProvider(props) {
       .catch((error) => console.log(error));
   };
 
+  const deletePost = async (postId) => {
+    await axios
+      .delete(`http://localhost:53653/api/Posts/${postId}`)
+      .then((response) => {
+        Swal.fire(response.data)
+      })
+      .catch((error) => console.log(error));
+  };
+
   return (
     <PostContext.Provider
       value={{
@@ -71,6 +81,8 @@ export default function PostContextProvider(props) {
         setAsUnLiked,
         setAsFav,
         setAsUnFav,
+        deletePost,
+        setPostContent
       }}
     >
       {props.children}

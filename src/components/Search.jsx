@@ -37,6 +37,9 @@ export default function Search() {
       <div id="searchArea">
         <TextField
           onChange={(e) => setName(e.target.value)}
+          onKeyDown={(e)=> {
+            if(e.key === 'Enter') search();
+          }}
           style={{ marginTop: 120 }}
           label="Search your friends"
           InputProps={{

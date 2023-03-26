@@ -3,7 +3,6 @@ import { ref, onValue, set, getDatabase, push } from "firebase/database";
 import { database } from "../../firebase/firebase";
 
 import { ConnectionContext } from "../../context/ConnectionContext";
-import { ImageContext } from "../../context/ImageContext";
 import { ChatContext } from "../../context/ChatContext";
 
 export default function UserChat(props) {
@@ -11,7 +10,6 @@ export default function UserChat(props) {
   if (!currentUser)
     currentUser = JSON.parse(sessionStorage.getItem("userLogged"));
   const { setUserChat } = useContext(ChatContext);
-  const { toBase64 } = useContext(ImageContext);
 
   const handleSelect = async () => {
     let combinedId = "";
@@ -40,8 +38,8 @@ export default function UserChat(props) {
         Id: props.user.Id,
         UserName: props.user.UserName,
         ProfilePic: props.user.Avatar
-          ? `data:image/png;base64,${toBase64(props.user.Avatar)}`
-          : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png",
+          ? props.user.Avatar
+          : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd_A1KWEAF8xoaZLlOT1PbmJv2H-46t7witrnmDyA&s",
         LastMessage: "No Messages Yet...",
         Date: new Date().toUTCString(),
       });
@@ -49,8 +47,8 @@ export default function UserChat(props) {
         Id: currentUser.Id,
         UserName: currentUser.UserName,
         ProfilePic: currentUser.Avatar
-          ? `data:image/png;base64,${toBase64(currentUser.Avatar)}`
-          : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png",
+          ? currentUser.Avatar
+          : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd_A1KWEAF8xoaZLlOT1PbmJv2H-46t7witrnmDyA&s",
         LastMessage: "No Messages Yet...",
         Date: new Date().toUTCString(),
       });
@@ -63,8 +61,8 @@ export default function UserChat(props) {
       <img
         src={
           props.user.Avatar
-            ? `data:image/png;base64,${toBase64(props.user.Avatar)}`
-            : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png"
+            ? props.user.Avatar
+            : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd_A1KWEAF8xoaZLlOT1PbmJv2H-46t7witrnmDyA&s"
         }
         alt=""
       />

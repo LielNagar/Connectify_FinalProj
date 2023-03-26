@@ -208,7 +208,7 @@ input[type="date"] {
 }
 
 .chat-navbar {
-    height: 48.5px;
+    height:70px;
     border-bottom: 2px solid #b4590e;
 }
 
@@ -262,7 +262,7 @@ input[type="date"] {
 }
 
 .chatInfo {
-    height: 50px;
+    height: 70px;
     background-color: #b4590e;
     display: flex;
     align-items: center;

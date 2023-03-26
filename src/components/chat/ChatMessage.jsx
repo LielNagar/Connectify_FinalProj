@@ -1,6 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getDatabase, ref, onValue } from "firebase/database";
 
 export default function ChatMessage(props) {
+  const [userPic, setUserPic] = useState(null);
+  useEffect(() => {
+    console.log("effec");
+    const db = getDatabase();
+    const userPic = ref(db, "users/" + props.message[1].SenderId);
+    onValue(userPic, async (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        if (Object.entries(data)[Object.keys(data).length - 1][1].Img) {
+          setUserPic(Object.entries(data)[Object.keys(data).length - 1][1].Img);
+        }
+      } else {
+        setUserPic(null);
+      }
+    });
+  });
+  if (props.message[1].SenderId === "INIT") {
+    return (
+      <div>
+        <p
+          style={{
+            textAlign: "center",
+            background: "#b4590e",
+            borderRadius: "55%",
+          }}
+        >
+          {props.message[1].Data}
+        </p>
+      </div>
+    );
+  }
   return (
     <div
       className={`chatMessage ${
@@ -10,8 +42,8 @@ export default function ChatMessage(props) {
       <div className="messageInfo">
         <img
           src={
-            props.message[1].SenderId === props.currentUserId
-              ? "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+            userPic
+              ? userPic
               : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd_A1KWEAF8xoaZLlOT1PbmJv2H-46t7witrnmDyA&s"
           } //NEED TO SHOW HERE USERS PROFILE PIC
           alt=""
@@ -23,13 +55,7 @@ export default function ChatMessage(props) {
       <div className="messageContent">
         {props.message[1].Data && <p>{props.message[1].Data}</p>}
         {props.message[1].Img && (
-          <img
-            src={
-              props.message[1].Img +
-              "?alt=media"
-            }
-            alt=""
-          />
+          <img src={props.message[1].Img + "?alt=media"} alt="" />
         )}
       </div>
     </div>

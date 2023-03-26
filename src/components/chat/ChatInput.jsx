@@ -3,7 +3,6 @@ import { getDatabase, ref, push, set, update } from "firebase/database";
 import { storage } from "../../firebase/firebase";
 import { v4 as uuid } from "uuid";
 import {
-  getDownloadURL,
   uploadBytesResumable,
   ref as sRef,
 } from "firebase/storage";
@@ -22,10 +21,62 @@ export default function ChatInput(props) {
     combinedId = String(props.userChatId).concat(String(currentUser.Id));
   else combinedId = String(currentUser.Id).concat(String(props.userChatId));
 
+  const sendMessage = async () => {
+    const db = getDatabase();
+    const messageListRef = ref(db, "chats/" + combinedId + "/messages");
+    const newMessageListRef = push(messageListRef);
+    if (img) {
+      const id = uuid();
+      const storageRef = sRef(storage, id);
+      const uploadTask = uploadBytesResumable(storageRef, img);
+      uploadTask.on(
+        (error) => {
+          console.log("here");
+          console.log(error);
+        },
+        async () => {
+          await set(newMessageListRef, {
+            Data: messageData,
+            SenderId: currentUser.Id,
+            Date: new Date().toUTCString(),
+            Img:
+              "https://firebasestorage.googleapis.com/v0/b/finalproj-connectify.appspot.com/o/" +
+              id,
+          });
+        }
+      );
+    } else {
+      await set(newMessageListRef, {
+        Data: messageData,
+        SenderId: currentUser.Id,
+        Date: new Date().toUTCString(),
+      });
+      const updates = {};
+      updates[
+        "userChats/" + props.userChatId + "/" + currentUser.Id + "/LastMessage"
+      ] = messageData;
+      updates[
+        "userChats/" + currentUser.Id + "/" + props.userChatId + "/LastMessage"
+      ] = messageData;
+      updates[
+        "userChats/" + currentUser.Id + "/" + props.userChatId + "/Date"
+      ] = new Date().toUTCString();
+      updates[
+        "userChats/" + props.userChatId + "/" + currentUser.Id + "/Date"
+      ] = new Date().toUTCString();
+      await update(ref(db), updates);
+    }
+    setImg(null);
+    setMessageData("");
+  };
+
   return (
     <div className="chatInput">
       <input
         type="text"
+        onKeyDown={(e) => {
+          if (e.key === "Enter") sendMessage();
+        }}
         placeholder="Type Something..."
         onChange={(e) => setMessageData(e.target.value)}
         value={messageData}
@@ -47,64 +98,7 @@ export default function ChatInput(props) {
             alt=""
           />
         </label>
-        <button
-          onClick={async () => {
-            const db = getDatabase();
-            const messageListRef = ref(db, "chats/" + combinedId + "/messages");
-            const newMessageListRef = push(messageListRef);
-            if (img) {
-              const id = uuid();
-              const storageRef = sRef(storage, id);
-              const uploadTask = uploadBytesResumable(storageRef, img);
-              uploadTask.on(
-                (error) => {
-                  console.log("here");
-                  console.log(error);
-                },
-                async () => {
-                  await set(newMessageListRef, {
-                    Data: messageData,
-                    SenderId: currentUser.Id,
-                    Date: new Date().toUTCString(),
-                    Img: 'https://firebasestorage.googleapis.com/v0/b/finalproj-connectify.appspot.com/o/' +id,
-                  });
-                }
-              );
-            } else {
-              await set(newMessageListRef, {
-                Data: messageData,
-                SenderId: currentUser.Id,
-                Date: new Date().toUTCString(),
-              });
-              const updates = {};
-              updates[
-                "userChats/" +
-                  props.userChatId +
-                  "/" +
-                  currentUser.Id +
-                  "/LastMessage"
-              ] = messageData;
-              updates[
-                "userChats/" +
-                  currentUser.Id +
-                  "/" +
-                  props.userChatId +
-                  "/LastMessage"
-              ] = messageData;
-              updates[
-                "userChats/" + currentUser.Id + "/" + props.userChatId + "/Date"
-              ] = new Date().toUTCString();
-              updates[
-                "userChats/" + props.userChatId + "/" + currentUser.Id + "/Date"
-              ] = new Date().toUTCString();
-              await update(ref(db), updates);
-            }
-            setImg(null);
-            setMessageData("");
-          }}
-        >
-          Send
-        </button>
+        <button onClick={sendMessage}>Send</button>
       </div>
     </div>
   );
