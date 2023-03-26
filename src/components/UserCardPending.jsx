@@ -1,8 +1,14 @@
-import React from "react";
+import React, {useContext} from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
+import { ConnectionContext } from "../context/ConnectionContext";
+
+import CheckSharpIcon from '@mui/icons-material/CheckSharp';
+import ClearSharpIcon from '@mui/icons-material/ClearSharp';
+
 export default function UserCardPending(props) {
+  const {denyFriendRequest, confirmFriendRequest} = useContext(ConnectionContext)
   return (
     <div>
       <img
@@ -30,17 +36,10 @@ export default function UserCardPending(props) {
           {props.userName}
         </Link>
       <span style={{ marginLeft: "6px" }}>Age:</span>
-      <span style={{ marginLeft: "6px" }}>Gender:</span>
+      <span style={{ marginLeft: "6px" }}>Gender: {props.gender===0? 'Female':'Male'}</span>
       <span style={{ marginLeft: "6px" }}>Common Friends:</span>
-      <button
-        onClick={() => {
-          axios.put(
-            `http://localhost:53653/api/Users/friend/${props.currentId}/${props.id}`
-          );
-        }}
-      >
-        Confirm
-      </button>
+      <CheckSharpIcon style={{border:'1px solid green', borderRadius:'50%'}} color="success" onClick={() => confirmFriendRequest(props.currentId, props.id, props.userName)}/>
+      <ClearSharpIcon style={{border:'1px solid red', borderRadius:'50%', marginLeft:5}} sx={{color: 'red'}} onClick={() => denyFriendRequest(props.currentId, props.id, props.userName)}/>
     </div>
   );
 }

@@ -3,6 +3,15 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ConnectionContext } from "../context/ConnectionContext";
 
+import { getDatabase, ref, push, set, update } from "firebase/database";
+import { storage } from "../firebase/firebase";
+import { v4 as uuid } from "uuid";
+import {
+  getDownloadURL,
+  uploadBytesResumable,
+  ref as sRef,
+} from "firebase/storage";
+
 export default function SignUpPage() {
   const { setCurrentUser } = useContext(ConnectionContext);
 
@@ -14,6 +23,8 @@ export default function SignUpPage() {
         email,
         password,
         userName,
+        firstName,
+        lastName,
         location,
         birthday,
         gender,
@@ -30,8 +41,35 @@ export default function SignUpPage() {
             })
             .then((response) => {
               if (response.status === 201);
-              sessionStorage.setItem("userLogged", JSON.stringify(userToReturn));
+              sessionStorage.setItem(
+                "userLogged",
+                JSON.stringify(userToReturn)
+              );
               setCurrentUser(userToReturn);
+              if (selectedImage) {
+                const db = getDatabase();
+                const usersRef = ref(db, "users/" + userToReturn.Id);
+                const newUsersRef = push(usersRef);
+                const id = uuid();
+                const storageRef = sRef(storage, id);
+                const uploadTask = uploadBytesResumable(
+                  storageRef,
+                  selectedImage
+                );
+                uploadTask.on(
+                  (error) => {
+                    console.log("here");
+                    console.log(error);
+                  },
+                  async () => {
+                    await set(newUsersRef, {
+                      Img:
+                        "https://firebasestorage.googleapis.com/v0/b/finalproj-connectify.appspot.com/o/" +
+                        id+'?alt=media',
+                    });
+                  }
+                );
+              }
               navigate("/Homepage", { state: userToReturn });
             });
         }
@@ -41,6 +79,8 @@ export default function SignUpPage() {
 
   const [email, setEmail] = useState("");
   const [password, setpassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [userName, setUserName] = useState("");
   const [location, setLocation] = useState("");
   const [birthday, setBirthday] = useState("");
@@ -66,6 +106,24 @@ export default function SignUpPage() {
             <input
               type="text"
               onChange={(e) => setUserName(e.target.value)}
+              required={true}
+            ></input>
+            <br />
+          </div>
+          <div className="input-container">
+            <label>First Name</label>
+            <input
+              type="text"
+              onChange={(e) => setFirstName(e.target.value)}
+              required={true}
+            ></input>
+            <br />
+          </div>
+          <div className="input-container">
+            <label>Last Name</label>
+            <input
+              type="text"
+              onChange={(e) => setLastName(e.target.value)}
               required={true}
             ></input>
             <br />
@@ -101,14 +159,14 @@ export default function SignUpPage() {
             <input
               type="radio"
               name="gender"
-              value="1"
+              value={1}
               onChange={(e) => setGender(e.target.value)}
             />
             <label>Female</label>
             <input
               type="radio"
               name="gender"
-              value="0"
+              value={0}
               onChange={(e) => setGender(e.target.value)}
             />
             <br />

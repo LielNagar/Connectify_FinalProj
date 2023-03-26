@@ -69,6 +69,8 @@ export default function UsersCards(props) {
               location={user.Location}
               profileImgUrl={user.ProfileImgUrl}
               currentId={props.currentId}
+              birthday= {user.Birthday}
+              gender= {user.Gender}
               search={true}
             />
           );
@@ -77,8 +79,10 @@ export default function UsersCards(props) {
             <UserCard
               key={user.Id}
               id={user.Id}
+              gender= {user.Gender}
               name={user.UserName}
               location={user.Location}
+              birthday= {user.Birthday}
               profileImgUrl={user.ProfileImgUrl}
               currentId={props.currentId}
               search={true}

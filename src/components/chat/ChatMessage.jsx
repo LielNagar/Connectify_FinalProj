@@ -2,7 +2,11 @@ import React from "react";
 
 export default function ChatMessage(props) {
   return (
-    <div className={`chatMessage ${props.message[1].SenderId === props.currentUserId && "owner"}`}>
+    <div
+      className={`chatMessage ${
+        props.message[1].SenderId === props.currentUserId && "owner"
+      }`}
+    >
       <div className="messageInfo">
         <img
           src={
@@ -12,11 +16,21 @@ export default function ChatMessage(props) {
           } //NEED TO SHOW HERE USERS PROFILE PIC
           alt=""
         />
-        <span style={{fontSize:10}}>{new Date(props.message[1].Date).toLocaleString()}</span>
+        <span style={{ fontSize: 10 }}>
+          {new Date(props.message[1].Date).toLocaleString()}
+        </span>
       </div>
       <div className="messageContent">
-        <p>{props.message[1].Data}</p>
-        {props.message[1].Img && <img src={props.message[1].Img} alt="" />}
+        {props.message[1].Data && <p>{props.message[1].Data}</p>}
+        {props.message[1].Img && (
+          <img
+            src={
+              props.message[1].Img +
+              "?alt=media"
+            }
+            alt=""
+          />
+        )}
       </div>
     </div>
   );

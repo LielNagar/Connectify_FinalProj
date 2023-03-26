@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 
 import { ConnectionContext } from "../context/ConnectionContext";
 import Button from "@mui/material/Button";
+import CheckSharpIcon from '@mui/icons-material/CheckSharp';
+import ClearSharpIcon from '@mui/icons-material/ClearSharp';
 
 export default function UserCard(props) {
   const {
@@ -12,6 +14,16 @@ export default function UserCard(props) {
     addFriend,
     denyFriendRequest,
   } = useContext(ConnectionContext);
+
+  const calculateAge = (date) => {
+    date = new Date(date);
+    let today = new Date();
+    let month = today.getMonth();
+    let year = today.getFullYear();
+    let age = year - date.getFullYear();
+    if (month < date.getMonth()) age--;
+    return String(age);
+  };
 
   if (props.search)
     //CASE USER FOR SEARCH
@@ -44,15 +56,15 @@ export default function UserCard(props) {
             paddingBottom: "7px",
             marginBottom: "6px",
             marginLeft: "6px",
-            borderRight: "6px solid black",
+            borderRight: "4px solid black",
           }}
         >
           {props.name}
         </Link>
-        <span style={{ marginLeft: "6px" }}>Age:</span>
-        <span style={{ marginLeft: "6px" }}>Gender:</span>
+        <span style={{ marginLeft: "6px" }}>Age: {calculateAge(props.birthday)}</span>
+        <span style={{ marginLeft: "6px" }}>Gender: {props.gender===0? 'Female':'Male'}</span>
+        <span style={{ marginLeft: "6px" }}>Location: {props.location}</span>
         <span style={{ marginLeft: "6px" }}>Common Friends:</span>
-        <span>id: {props.id}</span>
         {/*HERE ARE THE OPTION FOR USER CARD WITH SOME FRIEND REQUEST:
           THE FIRST OPTION IS THAT YOU AND THE USER ARE FRIENDS, U HAVE THE OPTION TO CANCEL THE FRIENDSHIP.
           THE SECOND OPTION IS THAT YOU SENT THE USER A FRIEND REQUEST AND HE YET TO TAKE AN ACTION.
@@ -84,30 +96,27 @@ export default function UserCard(props) {
             CANCEL FRIEND REQUEST
           </Button>
         ) : props.status === "NEED ACTION" ? (
-          <div>
-            <Button
-              variant="contained"
-              size="small"
-              color="success"
-              style={{ backgroundColor: "green", marginBottom: "3px" }}
-              onClick={() =>
-                confirmFriendRequest(props.currentId, props.id, props.name)
-              }
-            >
-              CONFIRM
-            </Button>
-            <Button
-              variant="contained"
-              size="small"
-              color="success"
-              style={{ backgroundColor: "green", marginBottom: "3px" }}
-              onClick={() =>
-                denyFriendRequest(props.currentId, props.id, props.name)
-              }
-            >
-              DENY
-            </Button>
-          </div>
+          <>
+          <CheckSharpIcon
+            style={{ border: "1px solid green", borderRadius: "50%" }}
+            color="success"
+            onClick={() =>
+              confirmFriendRequest(props.currentId, props.id, props.userName)
+            }
+          />
+          <ClearSharpIcon
+            style={{
+              border: "1px solid red",
+              borderRadius: "50%",
+              marginLeft: 5,
+            }}
+            sx={{ color: "red" }}
+            onClick={() =>
+              denyFriendRequest(props.currentId, props.id, props.userName)
+            }
+          />
+        </>
+          
         ) : (
           <Button
             variant="contained"

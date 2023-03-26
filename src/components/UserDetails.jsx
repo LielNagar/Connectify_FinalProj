@@ -102,7 +102,7 @@ export default function UserDetails(props) {
             src={
               selectedImage
                 ? URL.createObjectURL(selectedImage)
-                : `data:image/png;base64,${toBase64(props.user.Avatar)}`
+                : props.user.Avatar
             }
             alt='No Pic'
           />

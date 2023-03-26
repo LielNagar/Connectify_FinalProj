@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getDatabase, ref, onValue } from "firebase/database";
 
 import { PostContext } from "../context/PostContext";
 import { ImageContext } from "../context/ImageContext";
@@ -18,7 +19,6 @@ export default function Post(props) {
 
   const { setAsLiked, setAsFav, setAsUnFav, setAsUnLiked } =
     useContext(PostContext);
-  const { toBase64 } = useContext(ImageContext);
 
   const formatDateTimeForPost = (datetime) => {
     datetime = new Date(datetime);
@@ -28,11 +28,12 @@ export default function Post(props) {
   };
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8080/users/${props.publisherId}`)
-      .then((response) => {
-        if (response.status === 200) setProfilerSrc(response.data.avatar);
-      });
+    const db = getDatabase();
+    const userPic = ref(db, "users/" + props.publisherId);
+    onValue(userPic, (snapshot) => {
+      const data = snapshot.val();
+      if(data) setProfilerSrc(Object.entries(data)[0][1].Img);
+    });
   }, [props.publisherId]);
 
   return (
@@ -41,7 +42,7 @@ export default function Post(props) {
         <img
           src={
             profilerSrc
-              ? `data:image/png;base64,${toBase64(profilerSrc)}`
+              ? profilerSrc
               : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png"
           }
           style={{ width: "150px", height: "100px" }}

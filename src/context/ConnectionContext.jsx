@@ -8,6 +8,7 @@ export default function ConnectionContextProvider(props) {
   const [currentUser, setCurrentUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [requests, setRequests] = useState([]);
+  const [userImage, setUserImage] = useState(null);
 
   const deleteFriendship = (currentId, otherUserId, userName) => {
     axios
@@ -96,9 +97,7 @@ export default function ConnectionContextProvider(props) {
       })
       .then(() => {
         const newReq = requests.filter((req) => {
-          return !(
-            req.User2_id === currentId && req.User1_id === otherUserId
-          );
+          return !(req.User2_id === currentId && req.User1_id === otherUserId);
         });
         setRequests(newReq);
       });
@@ -139,7 +138,9 @@ export default function ConnectionContextProvider(props) {
         denyFriendRequest,
         addFriend,
         currentUser,
-        setCurrentUser
+        setCurrentUser,
+        userImage,
+        setUserImage,
       }}
     >
       {props.children}

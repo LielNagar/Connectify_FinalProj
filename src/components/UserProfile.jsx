@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { getDatabase, ref, onValue } from "firebase/database";
 import axios from "axios";
 
 import { ConnectionContext } from "../context/ConnectionContext";
@@ -30,12 +31,12 @@ export default function UserProfile() {
       .then(async (response) => {
         if (response.status === 200) {
           userToShow = response.data;
-          await axios
-            .get(`http://localhost:8080/users/${userProfileId}`)
-            .then((response) => {
-              if (response.status === 200)
-                userToShow.Avatar = response.data.avatar;
-            });
+          const db = getDatabase();
+          const userPic = ref(db, "users/" + userProfileId);
+          onValue(userPic, (snapshot) => {
+            const data = snapshot.val();
+            if (data) userToShow.Avatar = Object.entries(data)[0][1].Img;
+          });
         }
         setUser(userToShow);
       });
