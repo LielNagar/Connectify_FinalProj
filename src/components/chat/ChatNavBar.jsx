@@ -1,12 +1,22 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { getDatabase, ref, onValue } from "firebase/database";
 
 import { ConnectionContext } from "../../context/ConnectionContext";
 
 export default function ChatNavbar() {
-  let { currentUser, userImage } = useContext(ConnectionContext);
-  if (!userImage) userImage = JSON.parse(sessionStorage.getItem("userImage"));
+  let { currentUser } = useContext(ConnectionContext);
   if (!currentUser)
     currentUser = JSON.parse(sessionStorage.getItem("userLogged"));
+    
+  const [userImage, setUserImage] = useState(null);
+  useEffect(() => {
+    const db = getDatabase();
+    const userPic = ref(db, "users/" + currentUser.Id);
+    onValue(userPic, async (snapshot) => {
+      const data = snapshot.val();
+      setUserImage(Object.entries(data)[0][1].Img);
+    });
+  });
 
   return (
     <div className="chat-navbar">

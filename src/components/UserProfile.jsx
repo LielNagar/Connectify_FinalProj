@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getDatabase, ref, onValue } from "firebase/database";
 import axios from "axios";
 
 import { ConnectionContext } from "../context/ConnectionContext";
@@ -14,31 +13,22 @@ import UserDetails from "./UserDetails";
 import AllPosts from "./AllPosts";
 
 export default function UserProfile() {
-  let {currentUser} = useContext(ConnectionContext)
-  if(!currentUser) currentUser = JSON.parse(sessionStorage.getItem('userLogged'));
+  let { currentUser } = useContext(ConnectionContext);
+  if (!currentUser)
+    currentUser = JSON.parse(sessionStorage.getItem("userLogged"));
 
   const { userProfileId } = useParams();
   const [post, setPost] = useState("");
   const { addPost } = useContext(PostContext);
 
   const [user, setUser] = useState({});
-  const {isRender} = useContext(ImageContext)
+  const { isRender } = useContext(ImageContext);
 
   useEffect(() => {
-    let userToShow;
     axios
       .get(`http://localhost:53653/api/Users/${userProfileId}`)
       .then(async (response) => {
-        if (response.status === 200) {
-          userToShow = response.data;
-          const db = getDatabase();
-          const userPic = ref(db, "users/" + userProfileId);
-          onValue(userPic, (snapshot) => {
-            const data = snapshot.val();
-            if (data) userToShow.Avatar = Object.entries(data)[0][1].Img;
-          });
-        }
-        setUser(userToShow);
+        setUser(response.data);
       });
   }, [userProfileId, isRender]);
 

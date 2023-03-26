@@ -3,14 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ConnectionContext } from "../context/ConnectionContext";
 
-import { getDatabase, ref, push, set, update } from "firebase/database";
+import { getDatabase, ref, push, set } from "firebase/database";
 import { storage } from "../firebase/firebase";
 import { v4 as uuid } from "uuid";
-import {
-  getDownloadURL,
-  uploadBytesResumable,
-  ref as sRef,
-} from "firebase/storage";
+import { uploadBytesResumable, ref as sRef } from "firebase/storage";
 
 export default function SignUpPage() {
   const { setCurrentUser } = useContext(ConnectionContext);
@@ -32,46 +28,30 @@ export default function SignUpPage() {
       .then(async (response) => {
         if (response.status === 201) {
           let userToReturn = response.data;
-          await axios
-            .post("http://localhost:8080/user", {
-              id: userToReturn.Id,
-              userName,
-              location,
-              email,
-            })
-            .then((response) => {
-              if (response.status === 201);
-              sessionStorage.setItem(
-                "userLogged",
-                JSON.stringify(userToReturn)
-              );
-              setCurrentUser(userToReturn);
-              if (selectedImage) {
-                const db = getDatabase();
-                const usersRef = ref(db, "users/" + userToReturn.Id);
-                const newUsersRef = push(usersRef);
-                const id = uuid();
-                const storageRef = sRef(storage, id);
-                const uploadTask = uploadBytesResumable(
-                  storageRef,
-                  selectedImage
-                );
-                uploadTask.on(
-                  (error) => {
-                    console.log("here");
-                    console.log(error);
-                  },
-                  async () => {
-                    await set(newUsersRef, {
-                      Img:
-                        "https://firebasestorage.googleapis.com/v0/b/finalproj-connectify.appspot.com/o/" +
-                        id+'?alt=media',
-                    });
-                  }
-                );
+          sessionStorage.setItem("userLogged", JSON.stringify(userToReturn));
+          setCurrentUser(userToReturn);
+          if (selectedImage) {
+            const db = getDatabase();
+            const usersRef = ref(db, "users/" + userToReturn.Id);
+            const newUsersRef = push(usersRef);
+            const id = uuid();
+            const storageRef = sRef(storage, id);
+            const uploadTask = uploadBytesResumable(storageRef, selectedImage);
+            uploadTask.on(
+              (error) => {
+                console.log(error);
+              },
+              async () => {
+                await set(newUsersRef, {
+                  Img:
+                    "https://firebasestorage.googleapis.com/v0/b/finalproj-connectify.appspot.com/o/" +
+                    id +
+                    "?alt=media",
+                });
               }
-              navigate("/Homepage", { state: userToReturn });
-            });
+            );
+          }
+          navigate("/Homepage", { state: userToReturn });
         }
       })
       .catch((error) => console.log(error));

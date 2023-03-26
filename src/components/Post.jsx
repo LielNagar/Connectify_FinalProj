@@ -3,13 +3,11 @@ import { Link } from "react-router-dom";
 import { getDatabase, ref, onValue } from "firebase/database";
 
 import { PostContext } from "../context/PostContext";
-import { ImageContext } from "../context/ImageContext";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbUpOffAltRoundedIcon from "@mui/icons-material/ThumbUpOffAltRounded";
 import { IconButton } from "@mui/material";
 import CardActions from "@mui/material/CardActions";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
-import axios from "axios";
 
 export default function Post(props) {
   const [likes, setlikes] = useState(props.likes || 0);

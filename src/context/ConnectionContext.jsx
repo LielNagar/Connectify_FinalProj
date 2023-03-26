@@ -8,7 +8,6 @@ export default function ConnectionContextProvider(props) {
   const [currentUser, setCurrentUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [requests, setRequests] = useState([]);
-  const [userImage, setUserImage] = useState(null);
 
   const deleteFriendship = (currentId, otherUserId, userName) => {
     axios
@@ -139,8 +138,6 @@ export default function ConnectionContextProvider(props) {
         addFriend,
         currentUser,
         setCurrentUser,
-        userImage,
-        setUserImage,
       }}
     >
       {props.children}

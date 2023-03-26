@@ -5,6 +5,8 @@ export const ImageContext = createContext();
 
 export default function ImageContextProvider(props) {
   const [isRender, setIsRender] = useState(false);
+  const [userImage, setUserImage] = useState(null);
+  const [userProfileImage, setUserProfileImage] = useState(null);
 
   const saveImg = async (file, userId) => {
     console.log(file);
@@ -20,14 +22,18 @@ export default function ImageContextProvider(props) {
       });
   };
 
-  const toBase64 = (arr) => {
-    return btoa(
-      arr.data.reduce((data, byte) => data + String.fromCharCode(byte), "")
-    );
-  };
-
   return (
-    <ImageContext.Provider value={{ saveImg, toBase64, setIsRender, isRender }}>
+    <ImageContext.Provider
+      value={{
+        saveImg,
+        setIsRender,
+        isRender,
+        userImage,
+        setUserImage,
+        userProfileImage,
+        setUserProfileImage,
+      }}
+    >
       {props.children}
     </ImageContext.Provider>
   );

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { getDatabase, ref, onValue } from "firebase/database";
 import { CiSettings } from "react-icons/ci";
 
 import { ImageContext } from "../context/ImageContext";
@@ -14,7 +15,10 @@ export default function UserDetails(props) {
   const [friends, setFriends] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [changeProfilePicture, setChangeProfilePicture] = useState(false);
-  const {saveImg, toBase64} = useContext(ImageContext)
+
+  let { saveImg, userProfileImage, setUserProfileImage } =
+    useContext(ImageContext);
+
   const userLogged = JSON.parse(sessionStorage.getItem("userLogged"));
 
   useEffect(() => {
@@ -25,6 +29,18 @@ export default function UserDetails(props) {
           setFriends(response.data);
         })
         .catch((error) => console.log(error));
+      const db = getDatabase();
+      const userPic = ref(db, "users/" + props.user.Id);
+      onValue(userPic, async (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          if (Object.entries(data)[0][1].Img) {
+            setUserProfileImage(Object.entries(data)[0][1].Img);
+          }
+        } else {
+          setUserProfileImage(null);
+        }
+      });
     }
   }, [props.user.Id]);
 
@@ -95,16 +111,16 @@ export default function UserDetails(props) {
           size="32px"
         />
       ) : null}
-      {props.user.Avatar ? (
+      {userProfileImage ? (
         <div>
           <img
             style={{ marginTop: 80, width: 250 }}
             src={
               selectedImage
                 ? URL.createObjectURL(selectedImage)
-                : props.user.Avatar
+                : userProfileImage
             }
-            alt='No Pic'
+            alt="No Pic"
           />
           {changeProfilePicture ? (
             <div>
@@ -132,10 +148,12 @@ export default function UserDetails(props) {
                 }}
               />
               <br />
-              <button onClick={() => {
-                setChangeProfilePicture(false)
-                setSelectedImage(null)
-              }}>
+              <button
+                onClick={() => {
+                  setChangeProfilePicture(false);
+                  setSelectedImage(null);
+                }}
+              >
                 Cancel
               </button>
             </div>
@@ -154,7 +172,7 @@ export default function UserDetails(props) {
                 ? URL.createObjectURL(selectedImage)
                 : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png"
             }
-            alt= 'No Pic'
+            alt="No Pic"
           ></img>{" "}
           <br />
           <br />
@@ -170,14 +188,16 @@ export default function UserDetails(props) {
               <br />
             </div>
           ) : null}
-          <input
-            type="file"
-            name="myImage"
-            onChange={(event) => {
-              console.log(event.target.files[0]);
-              setSelectedImage(event.target.files[0]);
-            }}
-          />
+          {props.user.Id === userLogged.Id ? (
+            <input
+              type="file"
+              name="myImage"
+              onChange={(event) => {
+                console.log(event.target.files[0]);
+                setSelectedImage(event.target.files[0]);
+              }}
+            />
+          ) : null}
         </div>
       )}
       <span>Name: {props.user.UserName ? props.user.UserName : "No Name"}</span>

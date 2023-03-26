@@ -6,11 +6,12 @@ import Swal from "sweetalert2";
 
 // import { ChatContext } from "../context/ChatContext";
 import { ConnectionContext } from "../context/ConnectionContext";
+import { ImageContext } from "../context/ImageContext";
 
 export default function LoginPage() {
   // const { setCurrentUser } = useContext(ChatContext);
-  const { setCurrentUser, setUserImage, userImage } =
-    useContext(ConnectionContext);
+  const { setUserImage } = useContext(ImageContext);
+  const { setCurrentUser } = useContext(ConnectionContext);
 
   const Login = async (e) => {
     var data;
@@ -27,8 +28,7 @@ export default function LoginPage() {
           const userPic = ref(db, "users/" + userToReturn.Id);
           onValue(userPic, async (snapshot) => {
             data = snapshot.val();
-            sessionStorage.setItem("userImage", JSON.stringify(Object.entries(data)[0][1].Img));
-            setUserImage(Object.entries(data)[0][1].Img);
+            if(data) setUserImage(Object.entries(data)[0][1].Img);
           });
           sessionStorage.setItem("userLogged", JSON.stringify(userToReturn));
           setCurrentUser(userToReturn);
