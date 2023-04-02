@@ -21,7 +21,7 @@ function App() {
           <Route exact path='/Homepage' element={<HomePage />}></Route>
           <Route exact path='/Posts/Favorites/:userId' element={<FavoritePosts />}></Route>
           <Route exact path='/Search' element={<Search />}></Route>
-          <Route exact path='/Profile/:userId' element={<UserProfile />}></Route>
+          <Route exact path='/Profile/:userProfileId' element={<UserProfile />}></Route>
         </Routes>
       </BrowserRouter>
       <Footer />

@@ -1,39 +1,55 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { getDatabase, ref, onValue } from "firebase/database";
+
+import { ConnectionContext } from "../../context/ConnectionContext";
 import UserChat from "./UserChat";
 import axios from "axios";
 
 export default function ChatSearch(props) {
+  let { currentUser } = useContext(ConnectionContext);
+  if (!currentUser)
+    currentUser = JSON.parse(sessionStorage.getItem("userLogged"));
+
   const [userToSearch, setUserToSearch] = useState(""); //for textbox
   const [users, setUsers] = useState(null);
 
   const handleSearch = async () => {
-    try {
-      await axios
-        .get(
-          `http://localhost:53653/api/Users/${props.user.Id}/search/${userToSearch}`
-        )
-        .then(async (response) => {
-          if (response.status === 200) {
-            let usersToSet = [];
-            await response.data.map(async (user) => {
-              await axios
-                .get(`http://localhost:8080/users/${user.Id}`)
-                .then((response) => {
-                  user.Avatar = response.data.avatar;
+    await axios
+      .get(
+        `http://localhost:53653/api/Users/${currentUser.Id}/search/${userToSearch}/chat`
+      )
+      .then(async (response) => {
+        if (response.status === 200) {
+          let usersToSet = [];
+          await response.data
+            .filter((user) => user.Id !== currentUser.Id)
+            .map(async (user) => {
+              const db = getDatabase();
+              const userPic = ref(db, "users/" + user.Id);
+              onValue(userPic, async (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                  if (
+                    Object.entries(data)[Object.keys(data).length - 1][1].Img
+                  ) {
+                    user.Avatar =
+                      Object.entries(data)[Object.keys(data).length - 1][1].Img;
+                    usersToSet.push(user);
+                  }
+                } else {
+                  user.Avatar = null;
                   usersToSet.push(user);
-                });
+                }
+              });
             });
-            setUsers(usersToSet);
-          }
-        });
-    } catch (err) {
-      console.log(err);
-    }
+          setUsers(usersToSet);
+        }
+      })
+      .catch((error) => console.log(error));
   };
 
   const handleKey = (e) => {
     if (e.key === "Enter") {
-      console.log("asdsd");
       handleSearch();
     }
   };
@@ -52,49 +68,10 @@ export default function ChatSearch(props) {
       {users
         ? users.map((user) => {
             return (
-              <UserChat user={user} key={user.Id} currentUser={props.user} />
+              <UserChat user={user} key={user.Id} currentUser={currentUser} />
             );
           })
         : null}
     </div>
   );
 }
-
-// useEffect(()=>{
-//   console.log('usersFounds')
-// },[users])
-
-// const handleSelect = async (userId) => {
-//   await getUserChatDetails(userId)
-//   console.log(userChat)
-//   let combinedId = "";
-//   if (userId < props.user.Id)
-//     combinedId = String(userId).concat(String(props.user.Id));
-//   else combinedId = String(props.user.Id).concat(String(userId));
-//   const res = ref(database, "chats/" + combinedId); //NEED TO TAKE HERE THE MESSAEGS INSTEAD??
-//   let data;
-//   onValue(res, (snapshot) => {
-//     data = snapshot.val();
-//     console.log(data);
-//   });
-//   if (!data) {
-//     // NO CHAT HISTORY INIT WITH A MESSAGE SO CREATE /CHATS/COMBINEDID AND /USERSCHAT/CURRENTID/USERID
-//     const db = getDatabase();
-//     console.log(combinedId);
-//     const date = new Date();
-
-//     const postListRef = ref(db, "chats/" + combinedId + "/messages");
-//     const newPostRef = push(postListRef);
-//     set(newPostRef, {
-//       senderId: "INIT",
-//       date: new Date().toDateString(),
-//       data: "No Messages Yet...",
-//     });
-//     await set(
-//       ref(db, "userChats/" + props.user.Id + "/" + userId),
-//       userChat
-//     );
-//   }
-//   setUserToSearch("");
-//   setUsers([]);
-// };

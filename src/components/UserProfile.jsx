@@ -2,7 +2,8 @@ import React, { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-import { PostContext } from "./PostContext";
+import { ConnectionContext } from "../context/ConnectionContext";
+import { PostContext } from "../context/PostContext";
 import { ImageContext } from "../context/ImageContext";
 
 import TextField from "@mui/material/TextField";
@@ -12,35 +13,27 @@ import UserDetails from "./UserDetails";
 import AllPosts from "./AllPosts";
 
 export default function UserProfile() {
-  const userLogged = JSON.parse(localStorage.getItem("userLogged"));
-  const { userId } = useParams();
-  const [post, setPost] = useState("");
-  const { addPost } = useContext(PostContext);
+  let { currentUser } = useContext(ConnectionContext);
+  if (!currentUser)
+    currentUser = JSON.parse(sessionStorage.getItem("userLogged"));
+
+  const { userProfileId } = useParams();
+  const { addPost,setPostContent, postContent } = useContext(PostContext);
 
   const [user, setUser] = useState({});
-  const {isRender} = useContext(ImageContext)
+  const { isRender } = useContext(ImageContext);
 
   useEffect(() => {
-    let userToShow;
     axios
-      .get(`http://localhost:53653/api/Users/${userId}`)
+      .get(`http://localhost:53653/api/Users/${userProfileId}`)
       .then(async (response) => {
-        if (response.status === 200) {
-          userToShow = response.data;
-          await axios
-            .get(`http://localhost:8080/users/${userId}`)
-            .then((response) => {
-              if (response.status === 200)
-                userToShow.Avatar = response.data.avatar;
-            });
-        }
-        setUser(userToShow);
+        setUser(response.data);
       });
-  }, [userId, isRender]);
+  }, [userProfileId, isRender]);
 
   return (
     <div className="UserProfile">
-      <Menu user={userLogged} />
+      <Menu />
       <UserDetails user={user} />
       <div style={{ float: "left" }}>
         <TextField
@@ -52,18 +45,19 @@ export default function UserProfile() {
           }}
           multiline={true}
           rows={4}
+          value={postContent}
           placeholder="Tell us something...."
-          onChange={(e) => setPost(e.target.value)}
+          onChange={(e) => setPostContent(e.target.value)}
         />
         <br />
         <Button
           variant="text"
           style={{ marginLeft: "47%", marginRight: "30%" }}
-          onClick={() => addPost(post, userLogged, userId)}
+          onClick={() => addPost(currentUser, userProfileId)}
         >
           Add Post!
         </Button>
-        <AllPosts user={user} currentId={userLogged.Id} />
+        <AllPosts userProfileId={userProfileId} />
       </div>
     </div>
   );

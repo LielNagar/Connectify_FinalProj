@@ -2,9 +2,12 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { getDatabase, ref, onValue } from "firebase/database";
 import { CiSettings } from "react-icons/ci";
 
 import { ImageContext } from "../context/ImageContext";
+import { ConnectionContext } from "../context/ConnectionContext";
+
 import UserCard from "./UserCard";
 import UserCardPending from "./UserCardPending";
 
@@ -14,12 +17,15 @@ export default function UserDetails(props) {
   const [friends, setFriends] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [changeProfilePicture, setChangeProfilePicture] = useState(false);
-  const userLogged = JSON.parse(localStorage.getItem("userLogged"));
 
-  const {saveImg, toBase64} = useContext(ImageContext)
+  let { saveImg, userProfileImage, setUserProfileImage } =
+    useContext(ImageContext);
+
+  const { calculateAge } = useContext(ConnectionContext);
+
+  const userLogged = JSON.parse(sessionStorage.getItem("userLogged"));
 
   useEffect(() => {
-    console.log("user details render");
     if (props.user.Id) {
       axios
         .get(`http://localhost:53653/api/Users/${props.user.Id}/Friends`)
@@ -27,8 +33,22 @@ export default function UserDetails(props) {
           setFriends(response.data);
         })
         .catch((error) => console.log(error));
+      const db = getDatabase();
+      const userPic = ref(db, "users/" + props.user.Id);
+      onValue(userPic, async (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          if (Object.entries(data)[Object.keys(data).length - 1][1].Img) {
+            setUserProfileImage(
+              Object.entries(data)[Object.keys(data).length - 1][1].Img
+            );
+          }
+        } else {
+          setUserProfileImage(null);
+        }
+      });
     }
-  }, [props.user.Id]);
+  }, [props.user.Id, setUserProfileImage]);
 
   const seePendingFriendsRequests = () => {
     axios
@@ -63,16 +83,6 @@ export default function UserDetails(props) {
       .catch((error) => console.log(error));
   };
 
-  const calculateAge = (date) => {
-    date = new Date(date);
-    let today = new Date();
-    let month = today.getMonth();
-    let year = today.getFullYear();
-    let age = year - date.getFullYear();
-    if (month < date.getMonth()) age--;
-    return String(age);
-  };
-
   return (
     <div
       className="UserDetails"
@@ -85,28 +95,16 @@ export default function UserDetails(props) {
         marginBottom: "20px",
       }}
     >
-      {props.user.Id === userLogged.Id ? (
-        <CiSettings
-          style={{
-            marginTop: 50,
-            display: "inline",
-            position: "fixed",
-            left: 0,
-          }}
-          onClick={() => alert("settings")}
-          size="32px"
-        />
-      ) : null}
-      {props.user.Avatar ? (
+      {userProfileImage ? (
         <div>
           <img
             style={{ marginTop: 80, width: 250 }}
             src={
               selectedImage
                 ? URL.createObjectURL(selectedImage)
-                : `data:image/png;base64,${toBase64(props.user.Avatar)}`
+                : userProfileImage
             }
-            alt='No Pic'
+            alt="No Pic"
           />
           {changeProfilePicture ? (
             <div>
@@ -134,18 +132,33 @@ export default function UserDetails(props) {
                 }}
               />
               <br />
-              <button onClick={() => {
-                setChangeProfilePicture(false)
-                setSelectedImage(null)
-              }}>
+              <button
+                onClick={() => {
+                  setChangeProfilePicture(false);
+                  setSelectedImage(null);
+                }}
+              >
                 Cancel
               </button>
             </div>
-          ) : (
-            <button onClick={() => setChangeProfilePicture(true)}>
-              Change Profile Picture
-            </button>
-          )}
+          ) : props.user.Id === userLogged.Id ? (
+            <div>
+              <button onClick={() => setChangeProfilePicture(true)}>
+                Change Profile Picture
+              </button>
+              <CiSettings
+                style={{
+                  marginTop: 20,
+                  display: "inline",
+                  position: "absolut",
+                  left: 220,
+                  marginRight: 50,
+                }}
+                onClick={() => alert("settings")}
+                size="32px"
+              />
+            </div>
+          ) : null}
         </div>
       ) : (
         <div>
@@ -154,9 +167,9 @@ export default function UserDetails(props) {
             src={
               selectedImage
                 ? URL.createObjectURL(selectedImage)
-                : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png"
+                : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd_A1KWEAF8xoaZLlOT1PbmJv2H-46t7witrnmDyA&s"
             }
-            alt= 'No Pic'
+            alt="No Pic"
           ></img>{" "}
           <br />
           <br />
@@ -172,14 +185,16 @@ export default function UserDetails(props) {
               <br />
             </div>
           ) : null}
-          <input
-            type="file"
-            name="myImage"
-            onChange={(event) => {
-              console.log(event.target.files[0]);
-              setSelectedImage(event.target.files[0]);
-            }}
-          />
+          {props.user.Id === userLogged.Id ? (
+            <input
+              type="file"
+              name="myImage"
+              onChange={(event) => {
+                console.log(event.target.files[0]);
+                setSelectedImage(event.target.files[0]);
+              }}
+            />
+          ) : null}
         </div>
       )}
       <span>Name: {props.user.UserName ? props.user.UserName : "No Name"}</span>

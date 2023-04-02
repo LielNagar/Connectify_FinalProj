@@ -1,22 +1,22 @@
 import React, { useContext } from "react";
 import { ref, onValue, set, getDatabase, push } from "firebase/database";
 import { database } from "../../firebase/firebase";
+
+import { ConnectionContext } from "../../context/ConnectionContext";
 import { ChatContext } from "../../context/ChatContext";
 
 export default function UserChat(props) {
-  const {setUserChat} = useContext(ChatContext)
-  const toBase64 = (arr) => {
-    return btoa(
-      arr.data.reduce((data, byte) => data + String.fromCharCode(byte), "")
-    );
-  };
+  let { currentUser } = useContext(ConnectionContext);
+  if (!currentUser)
+    currentUser = JSON.parse(sessionStorage.getItem("userLogged"));
+  const { setUserChat } = useContext(ChatContext);
 
   const handleSelect = async () => {
     let combinedId = "";
-    if (props.user.Id < props.currentUser.Id)
-      combinedId = String(props.user.Id).concat(String(props.currentUser.Id));
+    if (props.user.Id < currentUser.Id)
+      combinedId = String(props.user.Id).concat(String(currentUser.Id));
     else
-      combinedId = String(props.currentUser.Id).concat(String(props.user.Id));
+      combinedId = String(currentUser.Id).concat(String(props.user.Id));
     const res = ref(database, "chats/" + combinedId); //NEED TO TAKE HERE THE MESSAEGS INSTEAD??
     let data;
     onValue(res, (snapshot) => {
@@ -34,25 +34,25 @@ export default function UserChat(props) {
         Date: new Date().toUTCString(),
         Data: "No Messages Yet...",
       });
-      set(ref(db, "userChats/" + props.currentUser.Id + "/" + props.user.Id), {
+      set(ref(db, "userChats/" + currentUser.Id + "/" + props.user.Id), {
         Id: props.user.Id,
         UserName: props.user.UserName,
         ProfilePic: props.user.Avatar
-          ? `data:image/png;base64,${toBase64(props.user.Avatar)}`
-          : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png",
+          ? props.user.Avatar
+          : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd_A1KWEAF8xoaZLlOT1PbmJv2H-46t7witrnmDyA&s",
         LastMessage: "No Messages Yet...",
-        Date: new Date().toUTCString()
+        Date: new Date().toUTCString(),
       });
-      set(ref(db, "userChats/" + props.user.Id + "/" + props.currentUser.Id), {
-        Id: props.currentUser.Id,
-        UserName: props.currentUser.UserName,
-        ProfilePic: props.currentUser.Avatar
-          ? `data:image/png;base64,${toBase64(props.currentUser.Avatar)}`
-          : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png",
+      set(ref(db, "userChats/" + props.user.Id + "/" + currentUser.Id), {
+        Id: currentUser.Id,
+        UserName: currentUser.UserName,
+        ProfilePic: currentUser.Avatar
+          ? currentUser.Avatar
+          : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd_A1KWEAF8xoaZLlOT1PbmJv2H-46t7witrnmDyA&s",
         LastMessage: "No Messages Yet...",
-        Date: new Date().toUTCString()
+        Date: new Date().toUTCString(),
       });
-      setUserChat(props.user)
+      setUserChat(props.user);
     }
   };
 
@@ -61,8 +61,8 @@ export default function UserChat(props) {
       <img
         src={
           props.user.Avatar
-            ? `data:image/png;base64,${toBase64(props.user.Avatar)}`
-            : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png"
+            ? props.user.Avatar
+            : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd_A1KWEAF8xoaZLlOT1PbmJv2H-46t7witrnmDyA&s"
         }
         alt=""
       />

@@ -1,20 +1,40 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { getDatabase, ref, onValue } from "firebase/database";
 
-export default function ChatNavbar(props) {
-    
-  const toBase64 = (arr) => {
-    return btoa(
-      arr.data.reduce((data, byte) => data + String.fromCharCode(byte), "")
-    );
-  };
+import { ConnectionContext } from "../../context/ConnectionContext";
 
-  const user= JSON.parse(localStorage.getItem('userLogged'))
+export default function ChatNavbar() {
+  let { currentUser } = useContext(ConnectionContext);
+  if (!currentUser)
+    currentUser = JSON.parse(sessionStorage.getItem("userLogged"));
+
+  const [userImage, setUserImage] = useState(null);
+  useEffect(() => {
+    const db = getDatabase();
+    const userPic = ref(db, "users/" + currentUser.Id);
+    onValue(userPic, async (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        if (Object.entries(data)[Object.keys(data).length - 1][1].Img) {
+          setUserImage(
+            Object.entries(data)[Object.keys(data).length - 1][1].Img
+          );
+        }
+      } else {
+        setUserImage(null);
+      }
+    });
+  });
 
   return (
     <div className="chat-navbar">
-      <span className="logo">{user.UserName}'s Chat</span>
+      <span className="logo">{currentUser.UserName}'s Chat</span>
       <img
-        src={user.Avatar? `data:image/png;base64,${toBase64(user.Avatar)}`:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png"}
+        src={
+          userImage
+            ? userImage
+            : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd_A1KWEAF8xoaZLlOT1PbmJv2H-46t7witrnmDyA&s"
+        }
         alt=""
         className="chat-user-image"
       />

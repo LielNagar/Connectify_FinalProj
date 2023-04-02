@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from "react";
 import axios from "axios";
 
-import { ConnectionContext } from "./ConnectionContext";
+import { ConnectionContext } from "../context/ConnectionContext";
 import UserCard from "./UserCard";
 
 export default function UsersCards(props) {
@@ -69,6 +69,8 @@ export default function UsersCards(props) {
               location={user.Location}
               profileImgUrl={user.ProfileImgUrl}
               currentId={props.currentId}
+              birthday= {user.Birthday}
+              gender= {user.Gender}
               search={true}
             />
           );
@@ -77,8 +79,10 @@ export default function UsersCards(props) {
             <UserCard
               key={user.Id}
               id={user.Id}
+              gender= {user.Gender}
               name={user.UserName}
               location={user.Location}
+              birthday= {user.Birthday}
               profileImgUrl={user.ProfileImgUrl}
               currentId={props.currentId}
               search={true}

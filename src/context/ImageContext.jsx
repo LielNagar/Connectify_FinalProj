@@ -1,33 +1,52 @@
 import React, { createContext, useState } from "react";
-import axios from "axios";
+import { getDatabase, ref, push, set, child } from "firebase/database";
+import { storage } from "../firebase/firebase";
+import { v4 as uuid } from "uuid";
+import { uploadBytesResumable, ref as sRef } from "firebase/storage";
 
 export const ImageContext = createContext();
 
 export default function ImageContextProvider(props) {
   const [isRender, setIsRender] = useState(false);
+  const [userImage, setUserImage] = useState(null);
+  const [userProfileImage, setUserProfileImage] = useState(null);
 
   const saveImg = async (file, userId) => {
-    console.log(file);
-    let formData = new FormData();
-    formData.append("avatar", file);
-    await axios
-      .post(`http://localhost:8080/users/${userId}/avatar`, formData)
-      .then((response) => {
-        if (response.status === 200) setIsRender(true);
-      })
-      .catch((error) => {
+    const db = getDatabase();
+    const newPostKey = push(child(ref(db), 'users')).key;
+    console.log(newPostKey)
+    const usersRef = ref(db, "users/" + userId);
+    const newUsersRef = push(usersRef);
+    const id = uuid();
+    const storageRef = sRef(storage, id);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+    uploadTask.on(
+      (error) => {
         console.log(error);
-      });
-  };
-
-  const toBase64 = (arr) => {
-    return btoa(
-      arr.data.reduce((data, byte) => data + String.fromCharCode(byte), "")
+      },
+      async () => {
+        await set(newUsersRef, {
+          Img:
+            "https://firebasestorage.googleapis.com/v0/b/finalproj-connectify.appspot.com/o/" +
+            id +
+            "?alt=media",
+        });
+      }
     );
   };
 
   return (
-    <ImageContext.Provider value={{ saveImg, toBase64, setIsRender, isRender }}>
+    <ImageContext.Provider
+      value={{
+        saveImg,
+        setIsRender,
+        isRender,
+        userImage,
+        setUserImage,
+        userProfileImage,
+        setUserProfileImage,
+      }}
+    >
       {props.children}
     </ImageContext.Provider>
   );

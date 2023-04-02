@@ -1,13 +1,20 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { getDatabase, ref, onValue } from "firebase/database";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-import { ChatContext } from "../context/ChatContext";
+// import { ChatContext } from "../context/ChatContext";
+import { ConnectionContext } from "../context/ConnectionContext";
+import { ImageContext } from "../context/ImageContext";
 
 export default function LoginPage() {
-  const { setCurrentUser } = useContext(ChatContext);
+  // const { setCurrentUser } = useContext(ChatContext);
+  const { setUserImage } = useContext(ImageContext);
+  const { setCurrentUser } = useContext(ConnectionContext);
+
   const Login = async (e) => {
+    var data;
     e.preventDefault();
     await axios
       .post(`http://localhost:53653/api/Users/login`, {
@@ -17,16 +24,15 @@ export default function LoginPage() {
       .then(async (response) => {
         if (response.status === 200) {
           let userToReturn = response.data;
-          await axios
-            .get(`http://localhost:8080/users/${response.data.Id}`)
-            .then((response) => {
-              if (response.status === 200) {
-                userToReturn.Avatar = response.data.avatar;
-              }
-              localStorage.setItem("userLogged", JSON.stringify(userToReturn));
-              setCurrentUser(userToReturn);
-              navigate("/Homepage", { state: userToReturn, replace: true });
-            });
+          const db = getDatabase();
+          const userPic = ref(db, "users/" + userToReturn.Id);
+          onValue(userPic, async (snapshot) => {
+            data = snapshot.val();
+            if(data) setUserImage(Object.entries(data)[0][1].Img);
+          });
+          sessionStorage.setItem("userLogged", JSON.stringify(userToReturn));
+          setCurrentUser(userToReturn);
+          navigate("/Homepage", { state: userToReturn, replace: true });
         }
       })
       .catch((error) => {

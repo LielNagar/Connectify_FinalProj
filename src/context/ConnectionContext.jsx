@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 export const ConnectionContext = createContext();
 
 export default function ConnectionContextProvider(props) {
+  const [currentUser, setCurrentUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [requests, setRequests] = useState([]);
 
@@ -95,9 +96,7 @@ export default function ConnectionContextProvider(props) {
       })
       .then(() => {
         const newReq = requests.filter((req) => {
-          return !(
-            req.User2_id === currentId && req.User1_id === otherUserId
-          );
+          return !(req.User2_id === currentId && req.User1_id === otherUserId);
         });
         setRequests(newReq);
       });
@@ -125,6 +124,16 @@ export default function ConnectionContextProvider(props) {
       });
   };
 
+  const calculateAge = (date) => {
+    date = new Date(date);
+    let today = new Date();
+    let month = today.getMonth();
+    let year = today.getFullYear();
+    let age = year - date.getFullYear();
+    if (month < date.getMonth()) age--;
+    return String(age);
+  };
+
   return (
     <ConnectionContext.Provider
       value={{
@@ -137,6 +146,9 @@ export default function ConnectionContextProvider(props) {
         confirmFriendRequest,
         denyFriendRequest,
         addFriend,
+        currentUser,
+        setCurrentUser,
+        calculateAge
       }}
     >
       {props.children}
