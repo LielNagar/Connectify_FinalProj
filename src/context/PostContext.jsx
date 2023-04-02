@@ -6,7 +6,7 @@ export const PostContext = createContext();
 
 export default function PostContextProvider(props) {
   const [posts, setPosts] = useState([]); //FOR ALL POSTS
-  const [postContent, setPostContent] = useState('');
+  const [postContent, setPostContent] = useState("");
 
   const addPost = (user, onWall) => {
     if (postContent === "")
@@ -25,7 +25,10 @@ export default function PostContextProvider(props) {
       })
       .then((response) => {
         console.log(response.data);
-        if (response.status === 201) setPosts([response.data, ...posts]);
+        if (response.status === 201) {
+          setPostContent("");
+          setPosts([response.data, ...posts]);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -63,12 +66,30 @@ export default function PostContextProvider(props) {
   };
 
   const deletePost = async (postId) => {
-    await axios
-      .delete(`http://localhost:53653/api/Posts/${postId}`)
-      .then((response) => {
-        Swal.fire(response.data)
-      })
-      .catch((error) => console.log(error));
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await axios
+          .delete(`http://localhost:53653/api/Posts/${postId}`)
+          .then((response) => {
+            Swal.fire(response.data);
+            setPosts((prevPosts) => {
+              const newPosts = prevPosts.filter(
+                (post) => post.Id !== postId
+              );
+              return newPosts;
+            });
+          })
+          .catch((error) => console.log(error));
+      }
+    });
   };
 
   return (
@@ -82,7 +103,8 @@ export default function PostContextProvider(props) {
         setAsFav,
         setAsUnFav,
         deletePost,
-        setPostContent
+        setPostContent,
+        postContent,
       }}
     >
       {props.children}

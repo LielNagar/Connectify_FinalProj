@@ -23,16 +23,19 @@ export default function AllPosts(props) {
           });
       } else {
         axios
-          .get(
-            `http://localhost:53653/api/Posts/${props.currentId}/Wall/${currentUser.Id}`
-          )
+          .get(`http://localhost:53653/api/Posts/Wall/${props.userProfileId}`)
           .then((response) => {
             //console.log(response.data)
             setPosts(response.data);
           });
       }
     return () => setPosts([]);
-  }, [currentUser.Id, setPosts, props.currentId, props.state]);
+  }, [
+    currentUser.Id,
+    setPosts,
+    props.state,
+    props.userProfileId,
+  ]);
 
   return (
     <div className="all-posts">
@@ -47,8 +50,9 @@ export default function AllPosts(props) {
           likes={post.Likes}
           dislikes={post.Dislikes}
           userName={post.UserName}
-          userId={props.currentId}
+          userId={currentUser.Id}
           datetime={post.Date}
+          onWall={post.OnWall}
         />
       ))}
     </div>

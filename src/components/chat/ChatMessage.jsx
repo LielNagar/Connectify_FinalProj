@@ -4,7 +4,6 @@ import { getDatabase, ref, onValue } from "firebase/database";
 export default function ChatMessage(props) {
   const [userPic, setUserPic] = useState(null);
   useEffect(() => {
-    console.log("effec");
     const db = getDatabase();
     const userPic = ref(db, "users/" + props.message[1].SenderId);
     onValue(userPic, async (snapshot) => {

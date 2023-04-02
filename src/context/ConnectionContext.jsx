@@ -124,6 +124,16 @@ export default function ConnectionContextProvider(props) {
       });
   };
 
+  const calculateAge = (date) => {
+    date = new Date(date);
+    let today = new Date();
+    let month = today.getMonth();
+    let year = today.getFullYear();
+    let age = year - date.getFullYear();
+    if (month < date.getMonth()) age--;
+    return String(age);
+  };
+
   return (
     <ConnectionContext.Provider
       value={{
@@ -138,6 +148,7 @@ export default function ConnectionContextProvider(props) {
         addFriend,
         currentUser,
         setCurrentUser,
+        calculateAge
       }}
     >
       {props.children}

@@ -59,6 +59,7 @@ a:visited {
 }
 
 .options-container {
+    height: 20%;
     display: flex;
     flex-direction: column;
 }
@@ -66,6 +67,7 @@ a:visited {
 .details-container {
     padding-left: 10px;
     width: 25%;
+    height: 80%;
     float: left;
 }
 
@@ -222,12 +224,19 @@ input[type="date"] {
 }
 
 .chat-search {
+    max-height: 300px;
     border-bottom: 1px solid gray;
+    overflow: auto;
 }
 
 .searchForm {
     padding: 10px;
+    position: fixed;
 }
+
+/* .searchForm :nth-child(2){
+    margin-top: 50px;
+} */
 
 .searchForm input {
     background-color: transparent;
@@ -243,6 +252,12 @@ input[type="date"] {
     align-items: center;
     gap: 10px;
     /* cursor: pointer; */
+}
+
+.chats{
+    overflow: auto;
+    max-height: 250px;
+    padding-top: 50px;
 }
 
 .userChat:hover {

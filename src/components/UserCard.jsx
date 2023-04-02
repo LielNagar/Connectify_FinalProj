@@ -13,17 +13,8 @@ export default function UserCard(props) {
     confirmFriendRequest,
     addFriend,
     denyFriendRequest,
+    calculateAge
   } = useContext(ConnectionContext);
-
-  const calculateAge = (date) => {
-    date = new Date(date);
-    let today = new Date();
-    let month = today.getMonth();
-    let year = today.getFullYear();
-    let age = year - date.getFullYear();
-    if (month < date.getMonth()) age--;
-    return String(age);
-  };
 
   if (props.search)
     //CASE USER FOR SEARCH

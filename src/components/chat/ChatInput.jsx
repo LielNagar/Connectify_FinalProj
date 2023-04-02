@@ -2,17 +2,17 @@ import React, { useState, useContext } from "react";
 import { getDatabase, ref, push, set, update } from "firebase/database";
 import { storage } from "../../firebase/firebase";
 import { v4 as uuid } from "uuid";
-import {
-  uploadBytesResumable,
-  ref as sRef,
-} from "firebase/storage";
+import { uploadBytesResumable, ref as sRef } from "firebase/storage";
+import Swal from "sweetalert2";
 
 import { ConnectionContext } from "../../context/ConnectionContext";
+import { ChatContext } from "../../context/ChatContext";
 
 export default function ChatInput(props) {
   const [messageData, setMessageData] = useState("");
   const [img, setImg] = useState(null);
   let { currentUser } = useContext(ConnectionContext);
+  const { userChat } = useContext(ChatContext);
   if (!currentUser)
     currentUser = JSON.parse(sessionStorage.getItem("userLogged"));
 
@@ -31,7 +31,6 @@ export default function ChatInput(props) {
       const uploadTask = uploadBytesResumable(storageRef, img);
       uploadTask.on(
         (error) => {
-          console.log("here");
           console.log(error);
         },
         async () => {
@@ -98,7 +97,16 @@ export default function ChatInput(props) {
             alt=""
           />
         </label>
-        <button onClick={sendMessage}>Send</button>
+        <button onClick={()=>{
+          if(userChat) sendMessage()
+          else{
+            Swal.fire(
+              "Didn't you forget something?",
+              "What about choosing who you chat with?",
+              "question"
+            );
+          }
+        }}>Send</button>
       </div>
     </div>
   );

@@ -6,6 +6,8 @@ import { getDatabase, ref, onValue } from "firebase/database";
 import { CiSettings } from "react-icons/ci";
 
 import { ImageContext } from "../context/ImageContext";
+import { ConnectionContext } from "../context/ConnectionContext";
+
 import UserCard from "./UserCard";
 import UserCardPending from "./UserCardPending";
 
@@ -18,6 +20,8 @@ export default function UserDetails(props) {
 
   let { saveImg, userProfileImage, setUserProfileImage } =
     useContext(ImageContext);
+
+  const { calculateAge } = useContext(ConnectionContext);
 
   const userLogged = JSON.parse(sessionStorage.getItem("userLogged"));
 
@@ -79,16 +83,6 @@ export default function UserDetails(props) {
       .catch((error) => console.log(error));
   };
 
-  const calculateAge = (date) => {
-    date = new Date(date);
-    let today = new Date();
-    let month = today.getMonth();
-    let year = today.getFullYear();
-    let age = year - date.getFullYear();
-    if (month < date.getMonth()) age--;
-    return String(age);
-  };
-
   return (
     <div
       className="UserDetails"
@@ -101,18 +95,6 @@ export default function UserDetails(props) {
         marginBottom: "20px",
       }}
     >
-      {props.user.Id === userLogged.Id ? (
-        <CiSettings
-          style={{
-            marginTop: 50,
-            display: "inline",
-            position: "fixed",
-            left: 0,
-          }}
-          onClick={() => alert("settings")}
-          size="32px"
-        />
-      ) : null}
       {userProfileImage ? (
         <div>
           <img
@@ -159,11 +141,24 @@ export default function UserDetails(props) {
                 Cancel
               </button>
             </div>
-          ) : (
-            <button onClick={() => setChangeProfilePicture(true)}>
-              Change Profile Picture
-            </button>
-          )}
+          ) : props.user.Id === userLogged.Id ? (
+            <div>
+              <button onClick={() => setChangeProfilePicture(true)}>
+                Change Profile Picture
+              </button>
+              <CiSettings
+                style={{
+                  marginTop: 20,
+                  display: "inline",
+                  position: "absolut",
+                  left: 220,
+                  marginRight: 50,
+                }}
+                onClick={() => alert("settings")}
+                size="32px"
+              />
+            </div>
+          ) : null}
         </div>
       ) : (
         <div>

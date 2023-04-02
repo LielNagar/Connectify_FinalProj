@@ -44,6 +44,7 @@ export default function Notification(props) {
             </div>
           );
         })}
+        <p>You have <span style={{color:'red'}}>{penders.length}</span> pending friend requests</p>
       {penders &&
         penders.map((pender) => (
           <UserCardPending
@@ -52,6 +53,7 @@ export default function Notification(props) {
             userName={pender.UserName}
             gender={pender.Gender}
             currentId={props.currentUserId}
+            birthday= {pender.Birthday}
           />
         ))}
     </div>

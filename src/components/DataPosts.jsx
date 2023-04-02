@@ -7,11 +7,11 @@ import Button from "@mui/material/Button";
 import AllPosts from "./AllPosts";
 
 export default function DataPosts() {
-  const { addPost,setPostContent } = useContext(PostContext);
+  const { addPost, setPostContent, postContent } = useContext(PostContext);
   let { currentUser } = useContext(ConnectionContext);
   if (!currentUser)
     currentUser = JSON.parse(sessionStorage.getItem("userLogged"));
-
+    
   return (
     <div style={{ float: "left", width: "40%", marginLeft: "35%" }}>
       <TextField
@@ -22,6 +22,7 @@ export default function DataPosts() {
         multiline={true}
         rows={4}
         placeholder="Tell us something...."
+        value={postContent}
         onChange={(e) => setPostContent(e.target.value)}
       />
       <br />
