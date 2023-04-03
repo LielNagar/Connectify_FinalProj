@@ -15,7 +15,7 @@ export default function Chat() {
   return (
     <div className="chat">
       <div className="chatInfo">
-        <span>Chatting with {userChat ? userChat.UserName : null}</span>
+        <span>Chatting with {userChat ? userChat.UserName?.replace(/\b\w/g, (x) => x.toUpperCase()) : null}</span>
       </div>
       <ChatMessages
         userChatId={userChat ? userChat.Id : null}

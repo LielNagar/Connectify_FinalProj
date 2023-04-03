@@ -28,7 +28,7 @@ export default function ChatNavbar() {
 
   return (
     <div className="chat-navbar">
-      <span className="logo">{currentUser.UserName}'s Chat</span>
+      <span className="logo">{currentUser.UserName.replace(/\b\w/g, (x) => x.toUpperCase())}'s Chat</span>
       <img
         src={
           userImage

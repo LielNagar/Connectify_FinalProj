@@ -1,22 +1,29 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 
 //COMPONENTS
 import { ConnectionContext } from "../context/ConnectionContext";
-import Menu from "./Menu";
-import LiveChat from "./chat/LiveChat";
-import Dashboard from "./Dashboard";
-import DataPosts from "./DataPosts";
+// import Menu from "./Menu";
+// import LiveChat from "./chat/LiveChat";
+// import Dashboard from "./Dashboard";
+// import DataPosts from "./DataPosts";
+import Feed from "./Feed";
+import Topbar from "./Topbar";
+import Sidebar from "./Sidebar";
+import Rightbar from "./Rightbar";
 
 export default function HomePage() {
-  let {currentUser} = useContext(ConnectionContext)
-  if(!currentUser) currentUser = JSON.parse(sessionStorage.getItem('userLogged'));
+  let { currentUser } = useContext(ConnectionContext);
+  if (!currentUser)
+    currentUser = JSON.parse(sessionStorage.getItem("userLogged"));
 
   return (
-    <div className="homepage">
-      <Menu />
-      <LiveChat />
-      <DataPosts />
-      <Dashboard currentUserId={currentUser.Id}/>
-    </div>
+    <>
+      <Topbar />
+      <div style={{display:'flex', width:'100%'}}>
+        <Sidebar currentUserId={currentUser.Id}/>
+        <Feed feed={true}/>
+        <Rightbar/>
+      </div>
+    </>
   );
 }

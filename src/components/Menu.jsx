@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import { ConnectionContext } from "../context/ConnectionContext";
 import Header from "./Header";
 
-import "../style/myCSS.css";
+import "../styles/myCSS.css";
 
 export default function Menu() {
   let { currentUser } = useContext(ConnectionContext);

@@ -42,7 +42,7 @@ export default function UsersCards(props) {
   }
 
   return (
-    <div>
+    <div style={{flex:7}}>
       {props.users.map((user) => {
         let found = false;
         let needToConfirm = false;

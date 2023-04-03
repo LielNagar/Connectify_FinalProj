@@ -1,17 +1,78 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
+// import { Link } from "react-router-dom";
 import { getDatabase, ref, onValue } from "firebase/database";
 
-import { ConnectionContext } from "../context/ConnectionContext";
+// import { ConnectionContext } from "../context/ConnectionContext";
 
 import CheckSharpIcon from "@mui/icons-material/CheckSharp";
 import ClearSharpIcon from "@mui/icons-material/ClearSharp";
 
 export default function UserCardPending(props) {
-  const { denyFriendRequest, confirmFriendRequest, calculateAge } =
-    useContext(ConnectionContext);
-
+  // const { denyFriendRequest, confirmFriendRequest, calculateAge } =
+  //   useContext(ConnectionContext);
+  
+  const [requests, setRequests] = useState([]);
   const [userImage, setUserImage] = useState(null);
+
+  const confirmFriendRequest = (currentId, otherUserId, userName) => {
+    axios
+      .put(
+        `http://localhost:53653/api/Users/friend/${currentId}/${otherUserId}`
+      )
+      .then((response) => {
+        if (response.status === 200)
+          return Swal.fire(
+            "So good to have friends!",
+            `You and ${userName} are now friends!`,
+            "success"
+          );
+      })
+      .then(() => {
+        axios
+          .get(`http://localhost:53653/api/Users/${currentId}/requests`)
+          .then((response) => {
+            setRequests(response.data);
+          })
+          .catch((error) => {
+            if (error.response.status === 404) {
+              console.log(error.response.data);
+            }
+          });
+      });
+  };
+
+  const denyFriendRequest = (currentId, otherUserId, userName) => {
+    axios
+      .delete(
+        `http://localhost:53653/api/Users/friend/${currentId}/${otherUserId}`
+      )
+      .then((response) => {
+        if (response.status === 200)
+          return Swal.fire(
+            "Why so serious?!",
+            `You cancelled ${userName} friend request!`,
+            "success"
+          );
+      })
+      .then(() => {
+        const newReq = requests.filter((req) => {
+          return !(req.User2_id === currentId && req.User1_id === otherUserId);
+        });
+        setRequests(newReq);
+      });
+  };
+
+  const calculateAge = (date) => {
+    date = new Date(date);
+    let today = new Date();
+    let month = today.getMonth();
+    let year = today.getFullYear();
+    let age = year - date.getFullYear();
+    if (month < date.getMonth()) age--;
+    return String(age);
+  };
 
   useEffect(() => {
     const db = getDatabase();
@@ -46,20 +107,7 @@ export default function UserCardPending(props) {
           marginLeft: "2px",
         }}
       />
-      <Link
-        to={`/Profile/${props.id}`}
-        style={{
-          textDecoration: "none",
-          fontFamily: "Arial",
-          fontSize: "20px",
-          paddingBottom: "7px",
-          marginBottom: "px",
-          marginLeft: "6px",
-          borderRight: "6px solid black",
-        }}
-      >
-        {props.userName}
-      </Link>
+      {props.name}
       <span style={{ marginLeft: "6px" }}>
         Age: {calculateAge(props.birthday)}
       </span>
@@ -83,3 +131,15 @@ export default function UserCardPending(props) {
     </div>
   );
 }
+// <Link
+//       to={`/Profile/${props.id}`}
+//       style={{
+//         textDecoration: "none",
+//         fontFamily: "Arial",
+//         fontSize: "20px",
+//         paddingBottom: "7px",
+//         marginBottom: "px",
+//         marginLeft: "6px",
+//         borderRight: "6px solid black",
+//       }}
+//     ></Link>
