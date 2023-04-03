@@ -8,7 +8,7 @@ import Search from './components/Search';
 import UserProfile from './components/UserProfile';
 import Footer from './components/Footer';
 
-import './style/myCSS.css'
+import './styles/myCSS.css'
 import FavoritePosts from './components/FavoritePosts';
 
 function App() {
