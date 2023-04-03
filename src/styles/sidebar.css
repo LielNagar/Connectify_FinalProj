@@ -28,6 +28,10 @@
     list-style: none;
 }
 
+.sidebarListItemText{
+    cursor: pointer;
+}
+
 .sidebarListItem {
     display: flex;
     align-items: center;
@@ -36,6 +40,7 @@
 
 .sidebarIcon {
     margin-right: 15px;
+    cursor: pointer;
 }
 
 .sidebarButton {

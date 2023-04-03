@@ -37,7 +37,7 @@ a:visited {
     flex-direction: column;
 }
 
-.post {
+/* .post {
     width: 550px;
     height: 100px;
     border: 1px solid black;
@@ -46,11 +46,11 @@ a:visited {
     padding-top: 10px;
     padding-bottom: 10px;
 
-}
+} */
 
-.post:last-child {
+/* .post:last-child {
     margin-bottom: 25px;
-}
+} */
 
 .image-container {
     border-right: 2px solid #b4590e;
@@ -202,12 +202,12 @@ input[type="date"] {
     flex: 2;
     height: 100%;
 }
-
+/* 
 .logo {
     color: #b4590e;
     font-size: 20px;
     font-weight: 600;
-}
+} */
 
 .chat-navbar {
     height:70px;
