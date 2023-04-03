@@ -166,6 +166,19 @@ input[type="date"] {
     margin: 10px 10px 0px 10px;
 }
 
+.userCardSearch {
+    border-radius: 10px;
+    height: 90;
+    border: "1px solid black";
+    width: 75%;
+    margin: auto;
+    margin-top: "5px";
+}
+
+.userCard :last-child {
+    margin-bottom: 12px;
+}
+
 .footer {
     position: fixed;
     left: 0;
@@ -178,7 +191,7 @@ input[type="date"] {
 
 /******CHAT*****/
 
-.chat-container {
+/* .chat-container {
     margin-top: 105px;
     border: 1px solid white;
     border-radius: 10px;
@@ -189,19 +202,30 @@ input[type="date"] {
     width: 35%;
     position: fixed;
     background-color: #eee;
-}
+} */
 
-.chat-container .chat-sidebar {
+/* .chat-container .chat-sidebar {
     flex: 1.1;
     height: 100%;
     border-right: 2px solid #b4590e;
     background-color: #e1e6e1;
+} */
+
+.chat-sidebar {
+    flex: 3;
+    height: 650px;
+    border-right: 2px solid black;
 }
 
-.chat-container .chat {
+.chat {
+    flex: 5;
+    height: 650px;
+}
+
+/* .chat-container .chat {
     flex: 2;
     height: 100%;
-}
+} */
 /* 
 .logo {
     color: #b4590e;
@@ -210,14 +234,14 @@ input[type="date"] {
 } */
 
 .chat-navbar {
-    height:70px;
-    border-bottom: 2px solid #b4590e;
+    background-color: #1877f2;
+    height: 70px;
+    border-bottom: 2px solid black;
 }
 
 .chat-user-image {
-    background-color: #ddddf7;
-    height: 24px;
-    width: 24px;
+    height: 50px;
+    width: 50px;
     border-radius: 50%;
     padding: 7px;
     object-fit: cover;
@@ -254,7 +278,7 @@ input[type="date"] {
     /* cursor: pointer; */
 }
 
-.chats{
+.chats {
     overflow: auto;
     max-height: 250px;
     padding-top: 50px;
@@ -278,12 +302,13 @@ input[type="date"] {
 
 .chatInfo {
     height: 70px;
-    background-color: #b4590e;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background-color: #1877f2;
     padding-left: 5px;
     color: #ddddf7;
+    border-bottom: 2px solid black;
 }
 
 .chatMessages {
@@ -335,7 +360,8 @@ input[type="date"] {
 .chatMessage.owner {
     flex-direction: row-reverse;
 }
-.chatMessage.owner .messageContent{
+
+.chatMessage.owner .messageContent {
     align-items: flex-end;
 }
 

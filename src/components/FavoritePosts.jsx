@@ -6,7 +6,9 @@ import Swal from "sweetalert2";
 import { ConnectionContext } from "../context/ConnectionContext";
 import { PostContext } from "../context/PostContext";
 import Post from "./Post";
-import Menu from "./Menu";
+// import Menu from "./Menu";
+import Topbar from "./Topbar";
+import Sidebar from "./Sidebar";
 
 export default function FavoritePosts() {
   const { posts, setPosts } = useContext(PostContext);
@@ -32,26 +34,29 @@ export default function FavoritePosts() {
       });
   }, [currentUser.Id, setPosts]);
   return (
-    <div>
-      <Menu />
-      <div style={{ marginTop: 120 }}>
-        {posts &&
-          posts.map((post) => (
-            <Post
-              key={post.Id}
-              id={post.Id}
-              isFav={post.IsFav}
-              isLiked={post.IsLiked}
-              publisherId={post.Publisher}
-              data={post.Content}
-              likes={post.Likes}
-              dislikes={post.Dislikes}
-              userName={post.UserName}
-              userId={currentUser.Id}
-              datetime={post.Date}
-            />
-          ))}
+    <>
+      <Topbar />
+      <div style={{ display: "flex", width: "100%" }}>
+        <Sidebar />
+        <div style={{ flex: 8, marginLeft: 10}}>
+          {posts &&
+            posts.map((post) => (
+              <Post
+                key={post.Id}
+                id={post.Id}
+                isFav={post.IsFav}
+                isLiked={post.IsLiked}
+                publisherId={post.Publisher}
+                data={post.Content}
+                likes={post.Likes}
+                dislikes={post.Dislikes}
+                userName={post.UserName}
+                userId={currentUser.Id}
+                datetime={post.Date}
+              />
+            ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

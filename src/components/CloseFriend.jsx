@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { getDatabase, ref, onValue } from "firebase/database";
 
 import "../styles/closeFriend.css";
@@ -23,19 +24,30 @@ export default function CloseFriend({ user }) {
   }, [user.Id]);
   return (
     <li className="sidebarFriend">
-      <img
-        className="sidebarFriendImg"
-        onClick={() => console.log(user.Id)}
-        src={
-          userProfileImage
-            ? userProfileImage
-            : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd_A1KWEAF8xoaZLlOT1PbmJv2H-46t7witrnmDyA&s"
-        }
-        alt=""
-      />
-      <span className="sidebarFriendName" onClick={() => console.log(user.Id)}>
-        {user.UserName}
-      </span>
+      <Link
+        to={`/Profile/${user.Id}`}
+        style={{
+          textDecoration: "none",
+        }}
+      >
+        <img
+          className="sidebarFriendImg"
+          src={
+            userProfileImage
+              ? userProfileImage
+              : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd_A1KWEAF8xoaZLlOT1PbmJv2H-46t7witrnmDyA&s"
+          }
+          alt=""
+        />
+      </Link>
+      <Link
+        to={`/Profile/${user.Id}`}
+        style={{
+          textDecoration: "none",
+        }}
+      >
+        <span className="sidebarFriendName">{user.UserName}</span>
+      </Link>
     </li>
   );
 }

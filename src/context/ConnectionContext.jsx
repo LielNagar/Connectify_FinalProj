@@ -8,6 +8,7 @@ export default function ConnectionContextProvider(props) {
   const [currentUser, setCurrentUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [requests, setRequests] = useState([]);
+  const [penders, setPenders] = useState([]);
 
   const deleteFriendship = (currentId, otherUserId, userName) => {
     axios
@@ -102,6 +103,16 @@ export default function ConnectionContextProvider(props) {
       });
   };
 
+  const calculateAge = (date) => {
+    date = new Date(date);
+    let today = new Date();
+    let month = today.getMonth();
+    let year = today.getFullYear();
+    let age = year - date.getFullYear();
+    if (month < date.getMonth()) age--;
+    return String(age);
+  };
+
   const addFriend = (currentId, otherUserId, userName) => {
     axios
       .post(
@@ -124,15 +135,6 @@ export default function ConnectionContextProvider(props) {
       });
   };
 
-  const calculateAge = (date) => {
-    date = new Date(date);
-    let today = new Date();
-    let month = today.getMonth();
-    let year = today.getFullYear();
-    let age = year - date.getFullYear();
-    if (month < date.getMonth()) age--;
-    return String(age);
-  };
 
   return (
     <ConnectionContext.Provider
@@ -148,7 +150,9 @@ export default function ConnectionContextProvider(props) {
         addFriend,
         currentUser,
         setCurrentUser,
-        calculateAge
+        calculateAge,
+        penders,
+        setPenders,
       }}
     >
       {props.children}

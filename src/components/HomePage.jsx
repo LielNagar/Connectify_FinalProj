@@ -21,7 +21,7 @@ export default function HomePage() {
       <Topbar />
       <div style={{display:'flex', width:'100%'}}>
         <Sidebar currentUserId={currentUser.Id}/>
-        <Feed/>
+        <Feed feed={true}/>
         <Rightbar/>
       </div>
     </>

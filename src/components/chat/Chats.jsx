@@ -58,7 +58,7 @@ export default function Chats() {
                         marginTop: 10,
                       }}
                     >
-                      {chat[1].UserName}
+                      {chat[1].UserName?.replace(/\b\w/g, (x) => x.toUpperCase())}
                     </span>
                     <p style={{ fontSize: 14, color: "rgb(70, 70, 70)" }}>
                       {chat[1].LastMessage}

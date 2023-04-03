@@ -1,24 +1,34 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import {
   Search,
   Person,
   Chat,
-  Notifications,
   Logout,
 } from "@mui/icons-material";
 
 import { ConnectionContext } from "../context/ConnectionContext";
+import { ImageContext } from "../context/ImageContext";
 
+import UserCardPending from "./UserCardPending";
 import "../styles/topbar.css";
 
+const MySwal = withReactContent(Swal);
+
 export default function Topbar() {
-  let { currentUser } = useContext(ConnectionContext);
+  const [name, setName] = useState("");
+  let { currentUser, penders } = useContext(ConnectionContext);
+  const { userImage } = useContext(ImageContext);
   if (!currentUser)
     currentUser = JSON.parse(sessionStorage.getItem("userLogged"));
 
   const navigate = useNavigate();
+
+  const search = () => {
+    navigate("/Search", { state: name, replace: true });
+  };
 
   const navigateToMyProfile = () => {
     navigate(`/Profile/${currentUser.Id}`, {
@@ -34,7 +44,9 @@ export default function Topbar() {
   return (
     <div className="topbarContainer">
       <div className="topbarLeft">
-        <span className="logo">Connectify</span>
+        <span className="logo" onClick={navigateToHomePage}>
+          Connectify
+        </span>
         <span className="topbarLink" style={{ marginLeft: 10, color: "white" }}>
           Welcome back,{" "}
           {currentUser.UserName
@@ -44,8 +56,15 @@ export default function Topbar() {
       </div>
       <div className="topbarCentre">
         <div className="searchbar">
-          <Search className="searchIcon" />
-          <input placeholder="Search for friends..." className="searchInput" />
+          <Search className="searchIcon" onClick={search} />
+          <input
+            placeholder="Search for friends..."
+            className="searchInput"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") search();
+            }}
+            onChange={(e) => setName(e.target.value)}
+          />
         </div>
       </div>
       <div className="topbarRight">
@@ -54,22 +73,43 @@ export default function Topbar() {
             Home Page
           </span>
           <span className="topbarLink" onClick={navigateToMyProfile}>
-            Timeline
+            Profile
           </span>
         </div>
         <div className="topbarIcons">
           <div className="topbarIconItem">
-            <Person />
-            <span className="topbarIconBadge">1</span>
+            <Person
+              onClick={() => {
+                MySwal.fire({
+                  title: <i>My Pending Requests:</i>,
+                  html: (
+                    <div>
+                      {penders.map((user) => (
+                        <UserCardPending
+                          key={user.Id}
+                          id={user.Id}
+                          name={user.UserName}
+                          profileImgUrl={user.ProfileImgUrl}
+                          pending={true}
+                          birthday={user.Birthday}
+                          currentId={currentUser.Id}
+                        />
+                      ))}
+                    </div>
+                  ),
+                });
+              }}
+            />
+            <span className="topbarIconBadge">{penders.length}</span>
           </div>
           <div className="topbarIconItem">
-            <Chat />
-            <span className="topbarIconBadge">2</span>
+            <Chat
+              onClick={() =>
+                navigate("/Chat", { state: currentUser, replace: true })
+              }
+            />
           </div>
-          <div className="topbarIconItem">
-            <Notifications />
-            <span className="topbarIconBadge">1</span>
-          </div>
+
           <div className="topbarIconItem">
             <Logout
               onClick={() => {
@@ -90,7 +130,7 @@ export default function Topbar() {
             />
           </div>
         </div>
-        <img src="/assets/persons/1.jpg" alt="" className="topbarImg" />
+        <img src={userImage} alt="" className="topbarImg" />
       </div>
     </div>
   );

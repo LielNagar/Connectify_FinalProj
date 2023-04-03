@@ -5,6 +5,7 @@ import { getDatabase, ref, onValue } from "firebase/database";
 import { PostContext } from "../context/PostContext";
 import { IoMdThumbsUp } from "react-icons/io";
 import { Bookmark } from "@mui/icons-material";
+import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import { FiThumbsUp } from "react-icons/fi";
 import { RiDeleteBinLine } from "react-icons/ri";
 
@@ -73,12 +74,28 @@ export default function Post(props) {
             <span className="postDate">
               {formatDateTimeForPost(props.datetime)}
             </span>
-            <Bookmark className="sidebarIcon" style={{ marginLeft: 20 }} />{" "}
-            {/*NEED TO SET BOOKMARK MARGIN AND FUNCTIONALITY*/}
+            {isFav ? (
+              <Bookmark
+                style={{ marginLeft: 5 }}
+                onClick={async () => {
+                  await setAsUnFav(props.id, props.userId);
+                  setisFav(!isFav);
+                }}
+              />
+            ) : (
+              <BookmarkBorderOutlinedIcon
+                style={{ marginLeft: 5 }}
+                onClick={async () => {
+                  await setAsFav(props.id, props.userId);
+                  setisFav(!isFav);
+                }}
+              />
+            )}
             {(props.onWall === props.userId ||
               props.userId === props.publisherId) && (
               <RiDeleteBinLine
                 size={20}
+                style={{ marginLeft: 10 }}
                 onClick={() => {
                   deletePost(props.id);
                 }}
@@ -180,22 +197,22 @@ export default function Post(props) {
 //   </IconButton>
 // )}
 //       <span>{likes}</span>
-//       {isFav ? (
-//         <StarBorderIcon
-//           style={{ color: "yellow" }}
-//           onClick={async () => {
-//             await setAsUnFav(props.id, props.userId);
-//             setisFav(!isFav);
-//           }}
-//         ></StarBorderIcon>
-//       ) : (
-//         <StarBorderIcon
-//           onClick={async () => {
-//             await setAsFav(props.id, props.userId);
-//             setisFav(!isFav);
-//           }}
-//         ></StarBorderIcon>
-//       )}
+// {isFav ? (
+//   <StarBorderIcon
+//     style={{ color: "yellow" }}
+//     onClick={async () => {
+//       await setAsUnFav(props.id, props.userId);
+//       setisFav(!isFav);
+//     }}
+//   ></StarBorderIcon>
+// ) : (
+//   <StarBorderIcon
+//     onClick={async () => {
+//       await setAsFav(props.id, props.userId);
+//       setisFav(!isFav);
+//     }}
+//   ></StarBorderIcon>
+// )}
 // {(props.onWall === props.userId ||
 //   props.userId === props.publisherId) && (
 //   <DeleteOutlineSharpIcon

@@ -7,9 +7,9 @@ import { PostContext } from "../context/PostContext";
 
 import "../styles/share.css";
 
-export default function Share({ currentUser }) {
+export default function Share({ currentUser,onWall }) {
     
-  let { userProfileImage, setUserProfileImage } =
+  let { userImage, setUserImage } =
   useContext(ImageContext);
 
   const { addPost, setPostContent, postContent } = useContext(PostContext);
@@ -21,20 +21,20 @@ export default function Share({ currentUser }) {
       const data = snapshot.val();
       if (data) {
         if (Object.entries(data)[Object.keys(data).length - 1][1].Img) {
-          setUserProfileImage(
+          setUserImage(
             Object.entries(data)[Object.keys(data).length - 1][1].Img
           );
         }
       } else {
-        setUserProfileImage(null);
+        setUserImage(null);
       }
     });
-  }, [currentUser.Id, setUserProfileImage]);
+  }, [currentUser.Id, setUserImage]);
   return (
     <div className="share">
       <div className="shareWrapper">
         <div className="shareTop">
-          <img className="shareProfileImg" src={userProfileImage? userProfileImage:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd_A1KWEAF8xoaZLlOT1PbmJv2H-46t7witrnmDyA&s"} alt="" />
+          <img className="shareProfileImg" src={userImage? userImage:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd_A1KWEAF8xoaZLlOT1PbmJv2H-46t7witrnmDyA&s"} alt="" />
           <TextField
         className="shareInput"
         multiline={true}
@@ -46,7 +46,7 @@ export default function Share({ currentUser }) {
         </div>
         <hr className="shareHr" />
         <div className="shareBottom">
-          <button className="shareButton" onClick={()=>addPost(currentUser)}>Share</button>
+          <button className="shareButton" onClick={()=>addPost(currentUser,onWall)}>Share</button>
         </div>
       </div>
     </div>

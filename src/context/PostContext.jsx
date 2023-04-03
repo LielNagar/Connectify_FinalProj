@@ -24,7 +24,6 @@ export default function PostContextProvider(props) {
         onWall,
       })
       .then((response) => {
-        console.log(response.data);
         if (response.status === 201) {
           setPostContent("");
           setPosts([response.data, ...posts]);

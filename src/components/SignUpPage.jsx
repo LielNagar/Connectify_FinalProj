@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import validator from "validator";
 import { ConnectionContext } from "../context/ConnectionContext";
 
 import { getDatabase, ref, push, set } from "firebase/database";
@@ -9,53 +10,70 @@ import { v4 as uuid } from "uuid";
 import { uploadBytesResumable, ref as sRef } from "firebase/storage";
 
 import "../styles/loginPage.css";
+import Swal from "sweetalert2";
 export default function SignUpPage() {
   const { setCurrentUser } = useContext(ConnectionContext);
 
   const navigate = useNavigate();
   const signUp = async (e) => {
     e.preventDefault();
-    await axios
-      .post("http://localhost:53653/api/Users", {
-        email,
-        password,
-        userName,
-        firstName,
-        lastName,
-        location,
-        birthday,
-        gender,
-      })
-      .then(async (response) => {
-        if (response.status === 201) {
-          let userToReturn = response.data;
-          sessionStorage.setItem("userLogged", JSON.stringify(userToReturn));
-          setCurrentUser(userToReturn);
-          if (selectedImage) {
-            const db = getDatabase();
-            const usersRef = ref(db, "users/" + userToReturn.Id);
-            const newUsersRef = push(usersRef);
-            const id = uuid();
-            const storageRef = sRef(storage, id);
-            const uploadTask = uploadBytesResumable(storageRef, selectedImage);
-            uploadTask.on(
-              (error) => {
-                console.log(error);
-              },
-              async () => {
-                await set(newUsersRef, {
-                  Img:
-                    "https://firebasestorage.googleapis.com/v0/b/finalproj-connectify.appspot.com/o/" +
-                    id +
-                    "?alt=media",
-                });
-              }
-            );
+    if (validator.isEmail(email)) {
+      await axios
+        .post("http://localhost:53653/api/Users", {
+          email,
+          password,
+          userName,
+          firstName,
+          lastName,
+          location,
+          birthday,
+          gender,
+        })
+        .then(async (response) => {
+          if (response.status === 201) {
+            let userToReturn = response.data;
+            sessionStorage.setItem("userLogged", JSON.stringify(userToReturn));
+            setCurrentUser(userToReturn);
+            if (selectedImage) {
+              const db = getDatabase();
+              const usersRef = ref(db, "users/" + userToReturn.Id);
+              const newUsersRef = push(usersRef);
+              const id = uuid();
+              const storageRef = sRef(storage, id);
+              const uploadTask = uploadBytesResumable(
+                storageRef,
+                selectedImage
+              );
+              uploadTask.on(
+                (error) => {
+                  console.log(error);
+                },
+                async () => {
+                  await set(newUsersRef, {
+                    Img:
+                      "https://firebasestorage.googleapis.com/v0/b/finalproj-connectify.appspot.com/o/" +
+                      id +
+                      "?alt=media",
+                  });
+                }
+              );
+            }
+            navigate("/Homepage", { state: userToReturn });
           }
-          navigate("/Homepage", { state: userToReturn });
-        }
-      })
-      .catch((error) => console.log(error));
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: "error",
+            title: "Something went wrong!",
+          });
+        });
+    } else {
+      Swal.fire({
+        icon: "error",
+        text: "You inserted an invalid email",
+        title: "Something went wrong!",
+      });
+    }
   };
 
   const [email, setEmail] = useState("");
@@ -156,7 +174,9 @@ export default function SignUpPage() {
               </label>
             </div>
             <br />
-            <button className="loginButton" onClick={(e)=> signUp(e)}>Sign up</button>
+            <button className="loginButton" onClick={(e) => signUp(e)}>
+              Sign up
+            </button>
             <button
               className="loginRgisterButton"
               onClick={() => navigate("/")}
