@@ -28,7 +28,7 @@ export default function UserDetails(props) {
   useEffect(() => {
     if (props.user.Id) {
       axios
-        .get(`http://localhost:53653/api/Users/${props.user.Id}/Friends`)
+        .get(`/cgroup2/test2/tar1/api/Users/${props.user.Id}/Friends`)
         .then((response) => {
           setFriends(response.data);
         })
@@ -52,7 +52,7 @@ export default function UserDetails(props) {
 
   const seePendingFriendsRequests = () => {
     axios
-      .get(`http://localhost:53653/api/Users/${props.user.Id}/Friends/Pending`)
+      .get(`/cgroup2/test2/tar1/api/Users/${props.user.Id}/Friends/Pending`)
       .then((response) => {
         if (response.data.length === 0) {
           return MySwal.fire({

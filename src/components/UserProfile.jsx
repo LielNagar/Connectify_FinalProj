@@ -25,7 +25,7 @@ export default function UserProfile() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:53653/api/Users/${userProfileId}`)
+      .get(`/cgroup2/test2/tar1/api/Users/${userProfileId}`)
       .then(async (response) => {
         setUser(response.data);
       });

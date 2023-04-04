@@ -19,13 +19,13 @@ export default function Feed({ feed,userProfileId,onWall }) {
   useEffect(() => {
     if (feed) {   
       axios
-        .get(`http://localhost:53653/api/Posts/${currentUser.Id}`)
+        .get(`/cgroup2/test2/tar1/api/Posts/${currentUser.Id}`)
         .then((response) => {
           setPosts(response.data);
         });
     } else {
       axios
-        .get(`http://localhost:53653/api/Posts/Wall/${userProfileId}`)
+        .get(`/cgroup2/test2/tar1/api/Posts/Wall/${userProfileId}`)
         .then((response) => {
           setPosts(response.data);
         });

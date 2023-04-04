@@ -18,7 +18,7 @@ export default function FavoritePosts() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:53653/api/Posts/${currentUser.Id}/Favorite`)
+      .get(`/cgroup2/test2/tar1/api/Posts/${currentUser.Id}/Favorite`)
       .then((response) => {
         if (response.status === 200) {
           console.log(response.data);

@@ -16,7 +16,7 @@ export default function PostContextProvider(props) {
         "question"
       );
     axios
-      .post("http://localhost:53653/api/Posts", {
+      .post("/cgroup2/test2/tar1/api/Posts", {
         Publisher: user.Id,
         content: postContent,
         UserName: user.UserName,
@@ -36,7 +36,7 @@ export default function PostContextProvider(props) {
 
   const setAsLiked = async (postId, userId) => {
     axios
-      .post(`http://localhost:53653/api/Posts/Likes/${postId}/${userId}`)
+      .post(`/cgroup2/test2/tar1/api/Posts/Likes/${postId}/${userId}`)
       .then((response) => {
         if (response.status === 201) return true;
       })
@@ -45,21 +45,21 @@ export default function PostContextProvider(props) {
 
   const setAsUnLiked = async (postId, userId) => {
     axios
-      .delete(`http://localhost:53653/api/Posts/Likes/${postId}/${userId}`)
+      .delete(`/cgroup2/test2/tar1/api/Posts/Likes/${postId}/${userId}`)
       .then((response) => console.log(response))
       .catch((error) => console.log(error));
   };
 
   const setAsFav = async (postId, userId) => {
     await axios
-      .post(`http://localhost:53653/api/Posts/Favorite/${postId}/${userId}`)
+      .post(`/cgroup2/test2/tar1/api/Posts/Favorite/${postId}/${userId}`)
       .then((response) => console.log(response))
       .catch((error) => console.log(error));
   };
 
   const setAsUnFav = async (postId, userId) => {
     await axios
-      .delete(`http://localhost:53653/api/Posts/Favorite/${postId}/${userId}`)
+      .delete(`/cgroup2/test2/tar1/api/Posts/Favorite/${postId}/${userId}`)
       .then((response) => console.log(response))
       .catch((error) => console.log(error));
   };
@@ -76,7 +76,7 @@ export default function PostContextProvider(props) {
     }).then(async (result) => {
       if (result.isConfirmed) {
         await axios
-          .delete(`http://localhost:53653/api/Posts/${postId}`)
+          .delete(`/cgroup2/test2/tar1/api/Posts/${postId}`)
           .then((response) => {
             Swal.fire(response.data);
             setPosts((prevPosts) => {

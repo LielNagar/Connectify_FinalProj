@@ -16,14 +16,14 @@ export default function AllPosts(props) {
     if (currentUser.Id)
       if (props.state === "feed") {
         axios
-          .get(`http://localhost:53653/api/Posts/${currentUser.Id}`)
+          .get(`/cgroup2/test2/tar1/api/Posts/${currentUser.Id}`)
           .then((response) => {
             //console.log(response.data)
             setPosts(response.data);
           });
       } else {
         axios
-          .get(`http://localhost:53653/api/Posts/Wall/${props.userProfileId}`)
+          .get(`/cgroup2/test2/tar1/pi/Posts/Wall/${props.userProfileId}`)
           .then((response) => {
             //console.log(response.data)
             setPosts(response.data);

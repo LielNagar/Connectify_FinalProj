@@ -20,7 +20,7 @@ export default function Rightbar(props) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:53653/api/Users/${currentUser.Id}/dashboard`)
+      .get(`/cgroup2/test2/tar1/api/Users/${currentUser.Id}/dashboard`)
       .then((response) => {
         if (response.status === 200) {
           setBirthdayCelebrators(response.data[0]);
@@ -30,7 +30,7 @@ export default function Rightbar(props) {
       .catch((error) => setError(error));
     if (userProfileId) {
       axios
-        .get(`http://localhost:53653/api/Users/${userProfileId}/Friends`)
+        .get(`/cgroup2/test2/tar1/api/Users/${userProfileId}/Friends`)
         .then((response) => {
           setFriends(response.data);
         })

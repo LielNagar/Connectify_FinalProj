@@ -13,7 +13,7 @@ export default function ConnectionContextProvider(props) {
   const deleteFriendship = (currentId, otherUserId, userName) => {
     axios
       .delete(
-        `http://localhost:53653/api/Users/friend/${currentId}/${otherUserId}`
+        `/cgroup2/test2/tar1/api/Users/friend/${currentId}/${otherUserId}`
       )
       .then((response) => {
         if (response.status === 200)
@@ -36,7 +36,7 @@ export default function ConnectionContextProvider(props) {
   const cancelFriendRequest = (currentId, otherUserId, userName) => {
     axios
       .delete(
-        `http://localhost:53653/api/Users/friend/${currentId}/${otherUserId}`
+        `/cgroup2/test2/tar1/api/Users/friend/${currentId}/${otherUserId}`
       )
       .then((response) => {
         if (response.status === 200)
@@ -58,7 +58,7 @@ export default function ConnectionContextProvider(props) {
   const confirmFriendRequest = (currentId, otherUserId, userName) => {
     axios
       .put(
-        `http://localhost:53653/api/Users/friend/${currentId}/${otherUserId}`
+        `/cgroup2/test2/tar1/api/Users/friend/${currentId}/${otherUserId}`
       )
       .then((response) => {
         if (response.status === 200)
@@ -70,7 +70,7 @@ export default function ConnectionContextProvider(props) {
       })
       .then(() => {
         axios
-          .get(`http://localhost:53653/api/Users/${currentId}/requests`)
+          .get(`/cgroup2/test2/tar1/api/Users/${currentId}/requests`)
           .then((response) => {
             setRequests(response.data);
           })
@@ -85,7 +85,7 @@ export default function ConnectionContextProvider(props) {
   const denyFriendRequest = (currentId, otherUserId, userName) => {
     axios
       .delete(
-        `http://localhost:53653/api/Users/friend/${currentId}/${otherUserId}`
+        `/cgroup2/test2/tar1/api/Users/friend/${currentId}/${otherUserId}`
       )
       .then((response) => {
         if (response.status === 200)
@@ -116,7 +116,7 @@ export default function ConnectionContextProvider(props) {
   const addFriend = (currentId, otherUserId, userName) => {
     axios
       .post(
-        `http://localhost:53653/api/Users/friend/${currentId}/${otherUserId}`
+        `/cgroup2/test2/tar1/api/Users/friend/${currentId}/${otherUserId}`
       )
       .then((response) => {
         if (response.status === 201)

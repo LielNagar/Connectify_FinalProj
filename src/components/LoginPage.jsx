@@ -18,7 +18,7 @@ export default function LoginPage() {
     var data;
     e.preventDefault();
     await axios
-      .post(`http://localhost:53653/api/Users/login`, {
+      .post(`/cgroup2/test2/tar1/api/Users/login`, {
         email: email.toLowerCase(),
         password: password.toLowerCase(),
       })

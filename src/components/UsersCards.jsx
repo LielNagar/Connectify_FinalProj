@@ -10,7 +10,7 @@ export default function UsersCards(props) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:53653/api/Users/${props.currentId}/requests`)
+      .get(`/cgroup2/test2/tar1/api/Users/${props.currentId}/requests`)
       .then((response) => {
         setRequests(response.data);
       })

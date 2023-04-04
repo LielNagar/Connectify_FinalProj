@@ -18,7 +18,7 @@ export default function Sidebar(props) {
   const [friends, setFriends] = useState([]);
   useEffect(() => {
     axios
-      .get(`http://localhost:53653/api/Users/${currentUser.Id}/Friends`)
+      .get(`/cgroup2/test2/tar1/api/Users/${currentUser.Id}/Friends`)
       .then((response) => {
         if (response.status === 200) setFriends(response.data);
       });

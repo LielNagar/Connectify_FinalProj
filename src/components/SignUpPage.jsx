@@ -19,7 +19,7 @@ export default function SignUpPage() {
     e.preventDefault();
     if (validator.isEmail(email)) {
       await axios
-        .post("http://localhost:53653/api/Users", {
+        .post("/cgroup2/test2/tar1/api/Users", {
           email,
           password,
           userName,

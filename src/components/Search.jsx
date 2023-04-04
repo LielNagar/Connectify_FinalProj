@@ -17,7 +17,7 @@ export default function Search() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:53653/api/Users/${currentUser.Id}/search/${name}`)
+      .get(`/cgroup2/test2/tar1/api/Users/${currentUser.Id}/search/${name}`)
       .then((response) => {
         let usersToShow = [];
         response.data.forEach((userReturned) => {

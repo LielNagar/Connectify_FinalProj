@@ -11,7 +11,7 @@ export default function Notification(props) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:53653/api/Users/${props.currentUserId}/dashboard`)
+      .get(`/cgroup2/test2/tar1/api/Users/${props.currentUserId}/dashboard`)
       .then((response) => {
         console.log(response);
         if (response.status === 200) {

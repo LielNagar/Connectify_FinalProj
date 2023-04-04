@@ -15,17 +15,15 @@ import './styles/myCSS.css'
 function App() {
   return (
     <div className="app">
-      <BrowserRouter>
         <Routes>
-          <Route exact path='/' element={<LoginPage />}></Route>
-          <Route exact path='/SignUp' element={<SignUpPage />}></Route>
-          <Route exact path='/Homepage' element={<HomePage />}></Route>
-          <Route exact path='/Posts/Favorites/:userId' element={<FavoritePosts />}></Route>
-          <Route exact path='/Search' element={<Search />}></Route>
-          <Route exact path='/Chat' element={<LiveChat />}></Route>
-          <Route exact path='/Profile/:userProfileId' element={<Profile />}></Route>
+          <Route path='/' element={<LoginPage />}></Route>
+          <Route path='/SignUp' element={<SignUpPage />}></Route>
+          <Route path='/Homepage' element={<HomePage />}></Route>
+          <Route path='/Posts/Favorites/:userId' element={<FavoritePosts />}></Route>
+          <Route path='/Search' element={<Search />}></Route>
+          <Route path='/Chat' element={<LiveChat />}></Route>
+          <Route path='/Profile/:userProfileId' element={<Profile />}></Route>
         </Routes>
-      </BrowserRouter>
       <Footer />
     </div>
   );

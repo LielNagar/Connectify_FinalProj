@@ -16,7 +16,7 @@ export default function ChatSearch(props) {
   const handleSearch = async () => {
     await axios
       .get(
-        `http://localhost:53653/api/Users/${currentUser.Id}/search/${userToSearch}/chat`
+        `/cgroup2/test2/tar1/api/Users/${currentUser.Id}/search/${userToSearch}/chat`
       )
       .then(async (response) => {
         if (response.status === 200) {

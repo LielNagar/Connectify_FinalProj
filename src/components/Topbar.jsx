@@ -123,7 +123,7 @@ export default function Topbar() {
                   confirmButtonText: "Yes",
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    window.location.href = "/";
+                    window.location.href = "https://proj.ruppin.ac.il/cgroup2/test2/tar1/build";
                   }
                 });
               }}
