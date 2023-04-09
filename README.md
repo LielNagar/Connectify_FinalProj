@@ -1,7 +1,7 @@
 # Getting Started
 
 This project was created by Liel Nagar, you are welcome to sign in and test my application.
-If you want to get a quick view, you can always type test@gmail as your email and your password is 123
+If you want to get a quick view, you can always type test@gmail.com as your email and your password is 123
 
 ## Available Scripts
 
