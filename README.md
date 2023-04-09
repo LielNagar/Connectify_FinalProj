@@ -1,6 +1,7 @@
-# Getting Started with Create React App
+# Getting Started
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was created by Liel Nagar, you are welcome to sign in and test my application.
+If you want to get a quick view, you can always type test@gmail as your email and your password is 123
 
 ## Available Scripts
 
